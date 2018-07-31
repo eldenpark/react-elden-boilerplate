@@ -8,16 +8,35 @@ const StyledRoot = styled.div`
   color: blue;
 `;
 
+const Count = styled.p`
+  background-color: black;
+  color: white;
+`;
+
 const Root = ({
+  count,
+  handleClickAdd = () => {},
 }) => {
   return (
     <StyledRoot>
       Root
+      <Count>
+        {count}
+      </Count>
+      <button onClick={handleClickAdd}>
+        add
+      </button>
     </StyledRoot>
   );
 };
 
-Root.defaultProps = {};
-Root.propTypes = {};
+Root.defaultProps = {
+  count: 0,
+};
+
+Root.propTypes = {
+  count: PropTypes.number,
+  handleClickAdd: PropTypes.func.isRequired,
+};
 
 export default Root;
