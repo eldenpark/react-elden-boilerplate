@@ -5,9 +5,9 @@ let server = undefined;
  * Launching with other env (including `development`) will execute server.prod.
  */
 if (process.env.NODE_ENV === 'local') {
-  server = require('./app/server.local');
+  server = require('./serverApp/server.local');
 } else {
-  server = require('./app/server.prod');
+  server = require('./serverApp/server.prod');
 }
 
 module.exports = server();
