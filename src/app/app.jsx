@@ -30,7 +30,7 @@ Logger.info(`App is running on env: ${process.env.NODE_ENV}`);
   const store = configureStore.default();
 
   const render = (Component) => {
-    ReactDOM.render(
+    ReactDOM.hydrate(
       <AppContainer warnings={false}>
         <Provider store={store}>
           <BrowserRouter>

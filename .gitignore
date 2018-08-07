@@ -105,7 +105,8 @@ typings/
 
 # End of https://www.gitignore.io/api/node,linux,macos
 
-dist/
-.vscode/
-tsconfig.json
 __temp/
+.vscode/
+build/
+dist/
+tsconfig.json
