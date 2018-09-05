@@ -24,7 +24,7 @@ del([`${DIST_PATH}/*`]).then((paths) => {
     if (err || stats.hasErrors()) {
       console.error(info.errors);
     } else {
-      console.debug(stats.toString({
+      console.info(stats.toString({
         colors: true,
       }));
     }
