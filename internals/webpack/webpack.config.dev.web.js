@@ -10,7 +10,7 @@ const devConfig = {
   entry: {
     app: [ 
       'webpack-hot-middleware/client', 
-      path.resolve(APP_PATH, 'app.jsx'),
+      path.resolve(APP_PATH, 'client.jsx'),
     ],
   },
   mode: 'development',

@@ -4,12 +4,11 @@
   "description": "",
   "main": "",
   "scripts": {
-    "build:app": "NODE_ENV=production node ./internals/webpack/build.js",
-    "build:server": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build",
+    "build": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build",
     "lint": "./node_modules/.bin/eslint ./src",
     "start:local": "NODE_ENV=local node ./src/server/server.js",
     "start:prod": "NODE_ENV=production node ./src/server/server.js",
-    "start:ssr": "yarn run build:app && yarn run build:server && node ./build/serverApp/server.ssr.js",
+    "start:ssr": "yarn run build && node ./dist/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Elden S. Park",

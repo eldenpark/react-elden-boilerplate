@@ -1,33 +1,18 @@
-const path = require('path');
-const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path');
 
-const APP_PATH = path.resolve(__dirname, '../../src/app');
-const DIST_PATH = path.resolve(__dirname, '../../dist');
+const CLIENT_PATH = path.resolve(__dirname, '../../src/client');
+const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
 const INDEX_PATH = path.resolve(__dirname, './static/index.html');
 
 module.exports = {
   context: __dirname,
   entry: {
-    app: path.resolve(APP_PATH, 'app.jsx'),
+    app: path.resolve(CLIENT_PATH, 'client.jsx'),
     react: [ 'react', 'react-dom', 'redux', 'react-redux' ],
   },
-  externals: {
-    d3: 'd3',
-  },
-  optimization: {
-    minimize: true,
-    runtimeChunk: false,
-    splitChunks: {
-      chunks: 'all',
-    }
-  },
-  output: {
-    path: DIST_PATH,
-    filename: '[name].[chunkhash].js',
-    chunkFilename: 'chunk.[chunkhash].js',
-    publicPath: '/',
-  },
+  externals: {},
+  mode: 'development',
   module: {
     rules: [
       {
@@ -63,8 +48,22 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    minimize: true,
+    runtimeChunk: false,
+    splitChunks: {
+      chunks: 'all',
+    }
+  },
+  output: {
+    path: DIST_BUNDLE_PATH,
+    filename: '[name].[chunkhash].js',
+    chunkFilename: 'chunk.[chunkhash].js',
+    publicPath: '/',
+  },
   plugins: [
     new htmlWebpackPlugin({
+      filename: 'raw_index.html',
       template: INDEX_PATH,
     }),
   ],
@@ -74,19 +73,19 @@ module.exports = {
     ],
     extensions: ['.js', '.jsx'],
     alias: {
-      '@actions': path.resolve(APP_PATH, 'state', 'actions'),
-      '@apis': path.resolve(APP_PATH, 'apis'),
-      '@app-assets': path.resolve(APP_PATH, 'app-assets'),
-      '@components': path.resolve(APP_PATH, 'components'),
-      '@config': path.resolve(APP_PATH, 'config'),
-      '@constants': path.resolve(APP_PATH, 'constants'),
-      '@containers': path.resolve(APP_PATH, 'containers'),
-      '@hocs': path.resolve(APP_PATH, 'hocs'),
-      '@models': path.resolve(APP_PATH, 'models'),
-      '@modules': path.resolve(APP_PATH, 'modules'),
-      '@selectors': path.resolve(APP_PATH, 'state', 'selectors'),
-      '@src': path.resolve(APP_PATH),
-      '@utils': path.resolve(APP_PATH, 'utils'),
+      '@actions': path.resolve(CLIENT_PATH, 'state', 'actions'),
+      '@apis': path.resolve(CLIENT_PATH, 'apis'),
+      '@app-assets': path.resolve(CLIENT_PATH, 'app-assets'),
+      '@components': path.resolve(CLIENT_PATH, 'components'),
+      '@config': path.resolve(CLIENT_PATH, 'config'),
+      '@constants': path.resolve(CLIENT_PATH, 'constants'),
+      '@containers': path.resolve(CLIENT_PATH, 'containers'),
+      '@hocs': path.resolve(CLIENT_PATH, 'hocs'),
+      '@models': path.resolve(CLIENT_PATH, 'models'),
+      '@modules': path.resolve(CLIENT_PATH, 'modules'),
+      '@selectors': path.resolve(CLIENT_PATH, 'state', 'selectors'),
+      '@src': path.resolve(CLIENT_PATH),
+      '@utils': path.resolve(CLIENT_PATH, 'utils'),
     },
   },
   target: 'web',
