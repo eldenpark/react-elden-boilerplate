@@ -3,9 +3,8 @@ const del = require('del');
 const gulp = require('gulp');
 const path = require('path');
 const sourcemaps = require('gulp-sourcemaps');
-const webpack = require('webpack');
 
-const webpackConfig = require('../webpack/webpack.config.web');
+const babelRc = require('../../.babelrc');
 
 const BUILD_PATH = path.resolve(__dirname, '../../build');
 const DIST_PATH = path.resolve(__dirname, '../../dist');
@@ -13,17 +12,7 @@ const LOG_PATH = path.resolve(__dirname, '../../logs');
 const ROOT_PATH = path.resolve(__dirname, '../..');
 const SRC_PATH = path.resolve(__dirname, '../../src');
 
-const babelRc = {
-  "env": {
-    "local": {
-    }
-  },
-  "presets": [
-    "@babel/preset-env",
-    "@babel/preset-react",
-    [ "@babel/preset-stage-2", { "decoratorsLegacy": true } ]
-  ]
-};
+
 
 /**
  * Ensure that the current working directory is project root. This allows taking
@@ -68,22 +57,20 @@ gulp.task('emptylog', () => {
   ]);
 });
 
-gulp.task('webpack:client', (done) => {
-  const compiler = webpack(webpackConfig);
-  compiler.run((err, stats) => {
-    if (err || stats.hasErrors()) {
-      console.error(stats.toJson('erros-only').errors);
-      done();
-    } else {
-      const info = stats.toString({
-        colors: true,
-      });
-      console.info(info);
-      done();
-    }
-  });
-});
+// gulp.task('webpack:client', (done) => {
+//   const compiler = webpack(webpackConfig);
+//   compiler.run((err, stats) => {
+//     if (err || stats.hasErrors()) {
+//       console.error(stats.toJson('erros-only').errors);
+//       done();
+//     } else {
+//       const info = stats.toString({
+//         colors: true,
+//       });
+//       console.info(info);
+//       done();
+//     }
+//   });
+// });
 
-gulp.task('build', gulp.series('clean', 'babel', 'webpack:client'));
-
-// "build:app": "NODE_ENV=production node ./internals/webpack/build.js",
+gulp.task('build', gulp.series('clean', 'babel'));

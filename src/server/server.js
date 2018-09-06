@@ -1,13 +1,18 @@
 import express from "express";
 import fs from 'fs';
 import path from "path";
+import { Provider as ReduxProvider } from 'react-redux';
 import React from "react";
 import { renderToString } from "react-dom/server";
+import webpack from 'webpack';
 
+import appConfig from '@config/appConfig';
+import configureStore from '../client/state/configureStore';
 import Layout from "../client/Layout.web";
+import makeHtml from './makeHtml';
+import webpackConfig from '../../internals/webpack/webpack.config.dev.web';
 
 const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
-const INDEX_PATH = path.resolve(__dirname, '../../dist/bundle/raw_index.html');
 
 const PORT = 5001;
 
@@ -19,32 +24,56 @@ const SERVER_STATUS = {
 
 const app = express();
 const state = {
-  index: undefined,
+  entrypointBundles: [],
   status: SERVER_STATUS.NOT_LAUNCHED,
 };
 
-try {
-  state.index = fs.readFileSync(INDEX_PATH).toString();
-  state.status = SERVER_STATUS.LAUNCH_SUCCESS;
-
-  const element = <Layout/>;
-  const elementInString = renderToString(element);
-  state.index = state.index.replace('{{element}}', elementInString);
-} catch (err) {
-  console.error('error in finding index.html %s', err);
-  state.status = SERVER_STATUS.LAUNCH_ERROR;
-}
+const compiler = webpack(webpackConfig);
+compiler.run((err, stats) => {
+  console.info('webpack configuration: %o', webpackConfig);
+  if (err || stats.hasErrors()) {
+    console.error(stats.toString('erros-only'));
+  } else {
+    const info = stats.toJson({
+      all: false,
+      assets: true,
+      entrypoints: true,
+    });
+    Object.keys(info.entrypoints)
+      .map((entrypoint) => {
+        info.entrypoints[entrypoint].assets.map((asset) => {
+          asset.endsWith('js') && state.entrypointBundles.push(asset);
+        });
+      });
+    console.info('webpack compilation: %o', info);
+    state.status = SERVER_STATUS.LAUNCH_SUCCESS;
+  }
+});
 
 app.use(htmlLogger);
 app.use(express.static(DIST_BUNDLE_PATH));
 
 app.get("/*", (req, res) => {
+  const store = configureStore();
+
   if (state.status !== SERVER_STATUS.LAUNCH_SUCCESS) {
     res.writeHead(404);
-    res.end('server is not launched: %s', state.status);
+    res.end('server is not launched');
   } else {
+    const element = (
+      <ReduxProvider store={store}>
+        <Layout/>
+      </ReduxProvider>
+    );
+    const elementInString = renderToString(element);
+
     res.writeHead(200, { "Content-Type": "text/html" });
-    res.end(state.index);
+    res.end(makeHtml({
+      reactDom: elementInString,
+      reduxState: store,
+      reduxStateKey: appConfig.reduxStateKey,
+      bundles: state.entrypointBundles,
+    }));
   }
 });
 
@@ -53,6 +82,6 @@ app.listen(PORT, () => {
 });
 
 function htmlLogger(req, res, next) {
-  console.info('%s - url: %s, user agent: %s', new Date(), req.url, req.get('User-Agent'));
+  console.info('%s f- url: %s, user agent: %s', new Date(), req.url, req.get('User-Agent'));
   next();
 }

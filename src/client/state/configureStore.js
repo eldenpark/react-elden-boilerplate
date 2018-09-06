@@ -12,9 +12,13 @@ const reduxLogger = (store) => (next) => (action) => {
   return next(action);
 }
 
-export default function configureStore(state = {}) {
+export default function configureStore({
+  initialState,
+} = {}) {
+  Logger.info('redux store, initial state', initialState);
   const store = createStore(
     reducers,
+    initialState,
     applyMiddleware(thunk, reduxLogger),
   );
 
