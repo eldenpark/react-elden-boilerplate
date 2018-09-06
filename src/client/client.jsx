@@ -1,8 +1,13 @@
 // import { AppContainer } from 'react-hot-loader';
-// import { BrowserRouter, Route, Switch } from 'react-router-dom';
-// import { Provider } from 'react-redux';
-// import * as React from 'react';
-// import * as ReactDOM from 'react-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Provider as ReduxProvider } from 'react-redux';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+
+import appConfig from '@config/appConfig';
+import configureStore from '@client/state/configureStore';
+// import RootContainer from '@containers/app/RootContainer/RootContainer.web';
+import Layout from '@client/Layout.web';
 
 // import Logger from '@modules/Logger';
 
@@ -23,7 +28,7 @@
 //     configureStore,
 //     RootContainer,
 //   ] = await Promise.all([
-//     import('@src/state/configureStore'),
+//     import('@client/state/configureStore'),
 //     import('@containers/app/RootContainer/RootContainer.web'),
 //   ]);
 
@@ -53,10 +58,15 @@
 //   }
 // })();
 
-import React from 'react';
-import ReactDOM from "react-dom";
-
-import Layout from "./Layout.web";
+const store = configureStore({
+  initialState: window[appConfig.reduxStateKey],
+});
 
 const app = document.getElementById('app-root');
-ReactDOM.hydrate(<Layout/>, app);
+const element = (
+  <ReduxProvider store={store}>
+    <Layout/>
+  </ReduxProvider>
+);
+
+ReactDOM.hydrate(element, app);

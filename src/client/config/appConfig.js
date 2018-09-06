@@ -5,6 +5,7 @@ const appConfig = {
     graph: false,
     navigation: false,
   },
+  reduxStateKey: '__PRELOAED_STATE__',
 };
 
 export default appConfig;

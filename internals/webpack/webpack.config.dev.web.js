@@ -7,12 +7,12 @@ const APP_PATH = path.resolve(__dirname, '../../src/app');
 
 const devConfig = {
   devtool: 'source-map',
-  entry: {
-    app: [ 
-      'webpack-hot-middleware/client', 
-      path.resolve(APP_PATH, 'client.jsx'),
-    ],
-  },
+  // entry: {
+  //   app: [ 
+  //     'webpack-hot-middleware/client', 
+  //     path.resolve(APP_PATH, 'client.jsx'),
+  //   ],
+  // },
   mode: 'development',
   optimization: {
     minimize: false,

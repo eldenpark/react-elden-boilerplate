@@ -12,7 +12,6 @@ module.exports = {
     react: [ 'react', 'react-dom', 'redux', 'react-redux' ],
   },
   externals: {},
-  mode: 'development',
   module: {
     rules: [
       {
@@ -62,10 +61,10 @@ module.exports = {
     publicPath: '/',
   },
   plugins: [
-    new htmlWebpackPlugin({
-      filename: 'raw_index.html',
-      template: INDEX_PATH,
-    }),
+    // new htmlWebpackPlugin({
+    //   filename: 'raw_index.html',
+    //   template: INDEX_PATH,
+    // }),
   ],
   resolve: {
     modules: [
@@ -84,7 +83,7 @@ module.exports = {
       '@models': path.resolve(CLIENT_PATH, 'models'),
       '@modules': path.resolve(CLIENT_PATH, 'modules'),
       '@selectors': path.resolve(CLIENT_PATH, 'state', 'selectors'),
-      '@src': path.resolve(CLIENT_PATH),
+      '@client': path.resolve(CLIENT_PATH),
       '@utils': path.resolve(CLIENT_PATH, 'utils'),
     },
   },
