@@ -65,7 +65,9 @@ const store = configureStore({
 const app = document.getElementById('app-root');
 const element = (
   <ReduxProvider store={store}>
-    <Layout/>
+    <BrowserRouter>
+      <Layout/>
+    </BrowserRouter>
   </ReduxProvider>
 );
 
