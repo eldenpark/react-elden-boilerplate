@@ -1,25 +1,22 @@
 const babel = require('gulp-babel');
 const del = require('del');
+const fs = require('fs');
 const gulp = require('gulp');
 const path = require('path');
 const sourcemaps = require('gulp-sourcemaps');
+const webpack = require('webpack');
 
 const babelRc = require('../../.babelrc');
 
-const BUILD_PATH = path.resolve(__dirname, '../../build');
 const DIST_PATH = path.resolve(__dirname, '../../dist');
+const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
 const LOG_PATH = path.resolve(__dirname, '../../logs');
-const ROOT_PATH = path.resolve(__dirname, '../..');
 const SRC_PATH = path.resolve(__dirname, '../../src');
 
-
-
-/**
- * Ensure that the current working directory is project root. This allows taking
- * `node_modules` path as expected.
- */
-process.chdir('../../');
-console.info('Current working directory %s', process.cwd());
+(function changeCurrentWorkingDirectoryToResolveNodeModulesPath() {
+  process.chdir('../../');
+  console.info('Current working directory %s', process.cwd());
+})();
 
 gulp.task('babel', () => {
   console.info('[babel], DIST_PATH: %s, SRC_PATH: %s', DIST_PATH, SRC_PATH);
@@ -31,23 +28,32 @@ gulp.task('babel', () => {
 		.pipe(gulp.dest(DIST_PATH));
 });
 
-gulp.task('clean', () => {
+gulp.task('clean:client', () => {
   console.info('[clean] Remove all the contents in %s', DIST_PATH);
 
   return del([
-    `${DIST_PATH}/**/*`,
+    `${DIST_PATH}/bundle/**/*`,
   ]);
 });
 
-gulp.task('copy', () => {
-  console.info('[copy] src: %s, tgt: %s', SERVER_SRC_PATH, BUILD_PATH);
+gulp.task('clean:server', () => {
+  console.info('[clean] Remove all the contents in %s', DIST_PATH);
 
-  return gulp.src([
-    `${SERVER_SRC_PATH}/**/*`,
-    `!${SERVER_SRC_PATH}/**/*.js`,
-  ])
-    .pipe(gulp.dest(BUILD_PATH));
+  return del([
+    `${DIST_PATH}/server/**/*`,
+    `${DIST_PATH}/client/**/*`,
+  ]);
 });
+
+// gulp.task('copy', () => {
+//   console.info('[copy] src: %s, tgt: %s', SERVER_SRC_PATH, BUILD_PATH);
+
+//   return gulp.src([
+//     `${SERVER_SRC_PATH}/**/*`,
+//     `!${SERVER_SRC_PATH}/**/*.js`,
+//   ])
+//     .pipe(gulp.dest(BUILD_PATH));
+// });
 
 gulp.task('emptylog', () => {
   console.info('[emptylog] LOG_PATH: %s', LOG_PATH);
@@ -57,20 +63,28 @@ gulp.task('emptylog', () => {
   ]);
 });
 
-// gulp.task('webpack:client', (done) => {
-//   const compiler = webpack(webpackConfig);
-//   compiler.run((err, stats) => {
-//     if (err || stats.hasErrors()) {
-//       console.error(stats.toJson('erros-only').errors);
-//       done();
-//     } else {
-//       const info = stats.toString({
-//         colors: true,
-//       });
-//       console.info(info);
-//       done();
-//     }
-//   });
-// });
+gulp.task('webpack:client', (done) => {
+  const entrypointBundles = [];
+  const webpackConfig = require('../webpack/webpack.config.dev.web');
+  const compiler = webpack(webpackConfig);
 
-gulp.task('build', gulp.series('clean', 'babel'));
+  compiler.run((err, stats) => {
+    console.info('[webpack:client] webpack configuration:\n%o\n', webpackConfig);
+    if (err || stats.hasErrors()) {
+      console.error(stats.toString('erros-only'));
+    } else {
+      const info = stats.toJson({
+        all: false,
+        assets: true,
+        builtAt: true,
+        entrypoints: true,
+      });
+      console.info('[webpack:client] compilation success:\n%o\n', info);
+      fs.writeFileSync(`${DIST_BUNDLE_PATH}/build.json`, JSON.stringify(info));
+    }
+    done();
+  });
+});
+
+gulp.task('build:client', gulp.series('clean:client', 'webpack:client'));
+gulp.task('build:server', gulp.series('clean:server', 'babel'));
