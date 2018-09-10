@@ -1,6 +1,6 @@
 import ActionType from '@constants/ActionType';
 
-export const add_USING_REDUX_THUNK = (param) => {
+export const REDUX_THUNK__add = (param) => {
   return async (dispatch, getState) => {
     try {
       dispatch({
@@ -8,7 +8,7 @@ export const add_USING_REDUX_THUNK = (param) => {
         type: ActionType.ADD,
       });
 
-      const asyncResult = await asyncAction();
+      const asyncResult = await REDUX_THUNK__addSuccees();
       dispatch({
         payload: asyncResult,
         type: ActionType.ADD_SUCCESS,
@@ -16,16 +16,17 @@ export const add_USING_REDUX_THUNK = (param) => {
     } catch (err) {
       dispatch({
         error: true,
+        payload: err,
         type: ActionType.ADD_ERROR,
       });
     }
   };
 };
 
-function asyncAction() {
+function REDUX_THUNK__addSuccees() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve('async action success');
-    }, 1000);
+    }, 500);
   });
 }

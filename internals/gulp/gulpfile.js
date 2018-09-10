@@ -6,7 +6,7 @@ const path = require('path');
 const sourcemaps = require('gulp-sourcemaps');
 const webpack = require('webpack');
 
-const babelRc = require('../../.babelrc');
+const babelRc = require('../babel/.babelrc');
 
 const DIST_PATH = path.resolve(__dirname, '../../dist');
 const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');

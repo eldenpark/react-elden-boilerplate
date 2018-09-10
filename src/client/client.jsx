@@ -6,20 +6,20 @@ import * as ReactDOM from 'react-dom';
 
 import appConfig from '@config/appConfig';
 import configureStore from '@client/state/configureStore';
-// import RootContainer from '@containers/app/RootContainer/RootContainer.web';
+import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 import Layout from '@client/Layout.web';
 
 // import Logger from '@modules/Logger';
 
 // Logger.info(`App is running on env: ${process.env.NODE_ENV}`);
 
-// (function setPolyfill() {
-//   if ((typeof window !== 'undefined' && !window._babelPolyfill) 
-//     || (typeof global !== 'undefined' && !global._babelPolyfill)) {
-//     Logger.info(`babel-polyfill is imported, since it wasn't imported yet`);
-//     require('babel-polyfill');
-//   }
-// })();
+(function setPolyfill() {
+  if ((typeof window !== 'undefined' && !window._babelPolyfill) 
+    || (typeof global !== 'undefined' && !global._babelPolyfill)) {
+    console.info(`babel-polyfill is imported, since it wasn't imported yet`);
+    require('babel-polyfill');
+  }
+})();
 
 // (async function asyncInitRenderingAfterPolyfill() {
 //   const rootEl = document.getElementById('app-root');
@@ -66,7 +66,7 @@ const app = document.getElementById('app-root');
 const element = (
   <ReduxProvider store={store}>
     <BrowserRouter>
-      <Layout/>
+      <RootContainer/>
     </BrowserRouter>
   </ReduxProvider>
 );
