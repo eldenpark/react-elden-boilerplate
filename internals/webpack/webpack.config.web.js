@@ -1,6 +1,8 @@
 const htmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path');
 
+const babelRc = require('../babel/.babelrc');
+
 const CLIENT_PATH = path.resolve(__dirname, '../../src/client');
 const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
 const INDEX_PATH = path.resolve(__dirname, './static/index.html');
@@ -20,6 +22,7 @@ module.exports = {
         use: [
           {
             loader: 'babel-loader',
+            options: babelRc,
           },
         ],
       },
@@ -29,7 +32,7 @@ module.exports = {
           {
             loader: 'style-loader',
           },
-          {
+          { 
             loader: 'css-loader',
           },
         ],

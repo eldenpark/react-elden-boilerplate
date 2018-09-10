@@ -10,6 +10,7 @@ import appConfig from '@config/appConfig';
 import configureStore from '../client/state/configureStore';
 import Layout from "../client/Layout.web";
 import makeHtml from './makeHtml';
+import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 
 const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
 
@@ -62,7 +63,7 @@ app.get("/*", (req, res) => {
         <StaticRouter 
           context={{}}
           location={req.url}>
-          <Layout/>
+          <RootContainer/>
         </StaticRouter>
       </ReduxProvider>
     );

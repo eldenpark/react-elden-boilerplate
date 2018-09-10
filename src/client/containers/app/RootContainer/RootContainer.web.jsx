@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 import * as React from 'react';
 import { withRouter } from "react-router-dom";
 
-import { add_USING_REDUX_THUNK } from '@actions/someAction';
+import { REDUX_THUNK__add } from '@actions/someAction';
 import Root from '@components/app/Root/Root.web';
 
 class RootContainer extends React.Component {
   constructor() {
     super();
     this.handleClickAdd = this.handleClickAdd.bind(this);
+    this.handleClickNavigate = this.handleClickNavigate.bind(this);
   }
 
   componentDidCatch(err, info) {
@@ -24,20 +25,27 @@ class RootContainer extends React.Component {
   handleClickAdd(e, data) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.dispatch(add_USING_REDUX_THUNK());
+    this.props.dispatch(REDUX_THUNK__add());
+  }
+
+  handleClickNavigate(e, path) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.props.history.push(path);
   }
 
   render() {
     return (
-      <Root 
+      <Root
         count={this.props.count}
-        handleClickAdd={this.handleClickAdd}/>
+        handleClickAdd={this.handleClickAdd}
+        handleClickNavigate={this.handleClickNavigate}
+        location={this.props.location}/>
     );
   }
 }
 
 RootContainer.propTypes = {
-  
 };
 
 const makeMapStateToProps = () => {
