@@ -1,4 +1,4 @@
-const htmlWebpackPlugin = require('html-webpack-plugin')
+const htmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const babelRc = require('../babel/.babelrc');

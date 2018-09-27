@@ -55,7 +55,8 @@
     "webpack": "^4.1.1",
     "webpack-dev-middleware": "^3.0.1",
     "webpack-hot-middleware": "^2.21.2",
-    "webpack-merge": "^4.1.1"
+    "webpack-merge": "^4.1.1",
+    "webpack-node-externals": "^1.7.2"
   },
   "license": "MIT",
   "main": "",
@@ -64,10 +65,9 @@
     "build:server": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:server",
     "build:client": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:client",
     "lint": "./node_modules/.bin/eslint ./src",
-    "start:local": "NODE_ENV=local node ./src/server/server.js",
-    "start:prod": "NODE_ENV=production node ./src/server/server.js",
-    "start:ssr": "npm-run-all --parallel build:server build:client && node ./dist/server/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:local": "NODE_ENV=development npm-run-all --parallel build:server build:client && node ./dist/server/server.js",
+    "start:prod": "NODE_ENV=production npm-run-all --parallel build:server build:client && node ./dist/server/server.prod.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
   },
   "version": "0.0.1"
 }
