@@ -7,7 +7,6 @@ import * as ReactDOM from 'react-dom';
 import appConfig from '@config/appConfig';
 import configureStore from '@client/state/configureStore';
 import RootContainer from '@containers/app/RootContainer/RootContainer.web';
-import Layout from '@client/Layout.web';
 
 // import Logger from '@modules/Logger';
 
@@ -21,48 +20,48 @@ import Layout from '@client/Layout.web';
   }
 })();
 
-// (async function asyncInitRenderingAfterPolyfill() {
-//   const rootEl = document.getElementById('app-root');
+// // (async function asyncInitRenderingAfterPolyfill() {
+// //   const rootEl = document.getElementById('app-root');
   
-//   const [
-//     configureStore,
-//     RootContainer,
-//   ] = await Promise.all([
-//     import('@client/state/configureStore'),
-//     import('@containers/app/RootContainer/RootContainer.web'),
-//   ]);
+// //   const [
+// //     configureStore,
+// //     RootContainer,
+// //   ] = await Promise.all([
+// //     import('@client/state/configureStore'),
+// //     import('@containers/app/RootContainer/RootContainer.web'),
+// //   ]);
 
-//   const store = configureStore.default();
+// //   const store = configureStore.default();
 
-//   const render = (Component) => {
-//     ReactDOM.hydrate(
-//       <AppContainer warnings={false}>
-//         <Provider store={store}>
-//           <BrowserRouter>
-//             <Component/>
-//           </BrowserRouter>
-//         </Provider>
-//       </AppContainer>,
-//       rootEl,
-//     );
-//   };
+// //   const render = (Component) => {
+// //     ReactDOM.hydrate(
+// //       <AppContainer warnings={false}>
+// //         <Provider store={store}>
+// //           <BrowserRouter>
+// //             <Component/>
+// //           </BrowserRouter>
+// //         </Provider>
+// //       </AppContainer>,
+// //       rootEl,
+// //     );
+// //   };
   
-//   render(RootContainer.default);
+// //   render(RootContainer.default);
 
-//   if (module.hot) {
-//     module.hot.accept('./containers/app/RootContainer/RootContainer.web', () => {
-//       Logger.warn('Hot Module Replace');
-//       const component = require('@containers/app/RootContainer/RootContainer.web').default;
-//       render(component);
-//     });
-//   }
-// })();
+// //   if (module.hot) {
+// //     module.hot.accept('./containers/app/RootContainer/RootContainer.web', () => {
+// //       Logger.warn('Hot Module Replace');
+// //       const component = require('@containers/app/RootContainer/RootContainer.web').default;
+// //       render(component);
+// //     });
+// //   }
+// // })();
 
 const store = configureStore({
   initialState: window[appConfig.reduxStateKey],
 });
 
-const app = document.getElementById('app-root');
+const appRoot = document.getElementById('app-root');
 const element = (
   <ReduxProvider store={store}>
     <BrowserRouter>
@@ -71,4 +70,19 @@ const element = (
   </ReduxProvider>
 );
 
-ReactDOM.hydrate(element, app);
+function render(Component) {
+  ReactDOM.hydrate(
+    element,
+    appRoot,
+  );
+}
+
+console.log('client.jsx');
+
+render(element, appRoot);
+
+if (module.hot) {
+  // module.hot.accept('', () => {
+  //   console.log(1);
+  // })
+}

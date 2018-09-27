@@ -8,11 +8,11 @@ import { StaticRouter } from 'react-router-dom';
 
 import appConfig from '@config/appConfig';
 import configureStore from '../client/state/configureStore';
-import Layout from "../client/Layout.web";
 import makeHtml from './makeHtml';
 import RootContainer from '@containers/app/RootContainer/RootContainer.web';
+import paths from '../../internals/webpack/paths';
 
-const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
+const DIST_BUNDLE_PATH = paths.distBundlePath;
 
 const PORT = 5001;
 
@@ -23,16 +23,23 @@ const SERVER_STATUS = {
 };
 
 const app = express();
-const state = {
+let state = {
   entrypointBundles: [],
+  set(nextStatus) {
+    const obj = { 
+      ...this,
+      status: nextStatus,
+     };
+    return obj;
+  },
   status: SERVER_STATUS.NOT_LAUNCHED,
 };
 
-(function getBundles() {
+state = state.set((function calculateNextStatusWhileSearchingForBundles() {
   try {
-    const data = fs.readFileSync(`${DIST_BUNDLE_PATH}/build.json`);
+    const data = fs.readFileSync(`../bundle/build.json`);
     const build = JSON.parse(data.toString('utf8'));
-    console.info('[webpack build]: %o', build);
+    console.info('[webpack build retrieval]: %o', build);
 
     Object.keys(build.entrypoints)
       .map((entrypoint) => {
@@ -40,16 +47,16 @@ const state = {
           asset.endsWith('js') && state.entrypointBundles.push(asset);
         });
       });
-    state.status = SERVER_STATUS.LAUNCH_SUCCESS;
+      return SERVER_STATUS.LAUNCH_SUCCESS;
   } catch (err) {
     console.error(err);
-    state.status = SERVER_STATUS.LAUNCH_ERROR;
+    return SERVER_STATUS.LAUNCH_ERROR;
   }
-})();
+})());
 
 app.use(htmlLogger);
 
-app.use(express.static(DIST_BUNDLE_PATH));
+app.use(express.static('../bundle'));
 
 app.get("/*", (req, res) => {
   const store = configureStore();

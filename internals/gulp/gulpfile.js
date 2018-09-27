@@ -45,16 +45,6 @@ gulp.task('clean:server', () => {
   ]);
 });
 
-// gulp.task('copy', () => {
-//   console.info('[copy] src: %s, tgt: %s', SERVER_SRC_PATH, BUILD_PATH);
-
-//   return gulp.src([
-//     `${SERVER_SRC_PATH}/**/*`,
-//     `!${SERVER_SRC_PATH}/**/*.js`,
-//   ])
-//     .pipe(gulp.dest(BUILD_PATH));
-// });
-
 gulp.task('emptylog', () => {
   console.info('[emptylog] LOG_PATH: %s', LOG_PATH);
 
@@ -63,13 +53,12 @@ gulp.task('emptylog', () => {
   ]);
 });
 
-gulp.task('webpack:client', (done) => {
-  const entrypointBundles = [];
-  const webpackConfig = require('../webpack/webpack.config.dev.web');
+gulp.task('webpack:client:prod', (done) => {
+  const webpackConfig = require('../webpack/webpack.config.client.prod.web');
   const compiler = webpack(webpackConfig);
 
   compiler.run((err, stats) => {
-    console.info('[webpack:client] webpack configuration:\n%o\n', webpackConfig);
+    console.info('[webpack:client:prod] webpack configuration:\n%o\n', webpackConfig);
     if (err || stats.hasErrors()) {
       console.error(stats.toString('erros-only'));
     } else {
@@ -79,12 +68,34 @@ gulp.task('webpack:client', (done) => {
         builtAt: true,
         entrypoints: true,
       });
-      console.info('[webpack:client] compilation success:\n%o\n', info);
+      console.info('[webpack:client:prod] compilation success:\n%o\n', info);
       fs.writeFileSync(`${DIST_BUNDLE_PATH}/build.json`, JSON.stringify(info));
     }
     done();
   });
 });
 
-gulp.task('build:client', gulp.series('clean:client', 'webpack:client'));
-gulp.task('build:server', gulp.series('clean:server', 'babel'));
+gulp.task('webpack:server:prod', (done) => {
+  const webpackConfig = require('../webpack/webpack.config.server.prod');
+  const compiler = webpack(webpackConfig);
+
+  compiler.run((err, stats) => {
+    console.info('[webpack:server:prod] webpack configuration:\n%o\n', webpackConfig);
+    if (err || stats.hasErrors()) {
+      console.error(stats.toString('erros-only'));
+    } else {
+      const info = stats.toJson({
+        all: false,
+        assets: true,
+        builtAt: true,
+        entrypoints: true,
+      });
+      console.info('[webpack:server:prod] compilation success:\n%o\n', info);
+      // fs.writeFileSync(`${DIST_BUNDLE_PATH}/build.json`, JSON.stringify(info));
+    }
+    done();
+  });
+});
+
+gulp.task('build:client', gulp.series('clean:client', 'webpack:client:prod'));
+gulp.task('build:server', gulp.series('clean:server', 'webpack:server:prod'));
