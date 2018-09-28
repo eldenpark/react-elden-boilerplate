@@ -75,6 +75,28 @@ gulp.task('webpack:client:prod', (done) => {
   });
 });
 
+gulp.task('webpack:server:local', (done) => {
+  const webpackConfig = require('../webpack/webpack.config.server.local');
+  const compiler = webpack(webpackConfig);
+
+  compiler.run((err, stats) => {
+    console.info('[webpack:server:prod] webpack configuration:\n%o\n', webpackConfig);
+    if (err || stats.hasErrors()) {
+      console.error(stats.toString('erros-only'));
+    } else {
+      const info = stats.toJson({
+        all: false,
+        assets: true,
+        builtAt: true,
+        entrypoints: true,
+      });
+      console.info('[webpack:server:prod] compilation success:\n%o\n', info);
+      // fs.writeFileSync(`${DIST_BUNDLE_PATH}/build.json`, JSON.stringify(info));
+    }
+    done();
+  });
+});
+
 gulp.task('webpack:server:prod', (done) => {
   const webpackConfig = require('../webpack/webpack.config.server.prod');
   const compiler = webpack(webpackConfig);
@@ -97,5 +119,6 @@ gulp.task('webpack:server:prod', (done) => {
   });
 });
 
-gulp.task('build:client', gulp.series('clean:client', 'webpack:client:prod'));
-gulp.task('build:server', gulp.series('clean:server', 'webpack:server:prod'));
+gulp.task('build:client:prod', gulp.series('clean:client', 'webpack:client:prod'));
+gulp.task('build:server:prod', gulp.series('clean:server', 'webpack:server:prod'));
+gulp.task('build:server:local', gulp.series('clean:server', 'webpack:server:local'));

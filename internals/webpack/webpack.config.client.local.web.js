@@ -2,15 +2,15 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 
-const config  = require('./webpack.config.client.web');
-const CLIENT_PATH = path.resolve(__dirname, '../../src/client');
+const config = require('./webpack.config.client.web');
+const paths = require('./paths');
 
 const devConfig = {
   devtool: 'source-map',
   entry: {
     app: [ 
       'webpack-hot-middleware/client', 
-      path.resolve(CLIENT_PATH, 'client.jsx'),
+      path.resolve(paths.srcClient, 'client.jsx'),
     ],
   },
   mode: 'development',

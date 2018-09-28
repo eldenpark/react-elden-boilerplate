@@ -3,7 +3,6 @@ const path = require('path');
 const webpack = require('webpack');
 
 const config  = require('./webpack.config.client.web');
-const APP_PATH = path.resolve(__dirname, '../../src/app');
 
 const prodConfig = {
   mode: 'production',

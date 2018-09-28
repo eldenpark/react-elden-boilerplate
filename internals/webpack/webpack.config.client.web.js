@@ -2,15 +2,12 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const babelRc = require('../babel/.babelrc');
-
-const CLIENT_PATH = path.resolve(__dirname, '../../src/client');
-const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
-const INDEX_PATH = path.resolve(__dirname, './static/index.html');
+const paths = require('./paths');
 
 module.exports = {
   context: __dirname,
   entry: {
-    app: path.resolve(CLIENT_PATH, 'client.jsx'),
+    app: path.resolve(paths.srcClient, 'client.jsx'),
     react: [ 'react', 'react-dom', 'redux', 'react-redux' ],
   },
   externals: {},
@@ -58,7 +55,7 @@ module.exports = {
     }
   },
   output: {
-    path: DIST_BUNDLE_PATH,
+    path: paths.distBundle,
     filename: '[name].[chunkhash].js',
     chunkFilename: 'chunk.[chunkhash].js',
     publicPath: '/',
@@ -75,19 +72,19 @@ module.exports = {
     ],
     extensions: ['.js', '.jsx'],
     alias: {
-      '@actions': path.resolve(CLIENT_PATH, 'state', 'actions'),
-      '@apis': path.resolve(CLIENT_PATH, 'apis'),
-      '@app-assets': path.resolve(CLIENT_PATH, 'app-assets'),
-      '@components': path.resolve(CLIENT_PATH, 'components'),
-      '@config': path.resolve(CLIENT_PATH, 'config'),
-      '@constants': path.resolve(CLIENT_PATH, 'constants'),
-      '@containers': path.resolve(CLIENT_PATH, 'containers'),
-      '@hocs': path.resolve(CLIENT_PATH, 'hocs'),
-      '@models': path.resolve(CLIENT_PATH, 'models'),
-      '@modules': path.resolve(CLIENT_PATH, 'modules'),
-      '@selectors': path.resolve(CLIENT_PATH, 'state', 'selectors'),
-      '@client': path.resolve(CLIENT_PATH),
-      '@utils': path.resolve(CLIENT_PATH, 'utils'),
+      '@actions': path.resolve(paths.srcClient, 'state', 'actions'),
+      '@apis': path.resolve(paths.srcClient, 'apis'),
+      '@app-assets': path.resolve(paths.srcClient, 'app-assets'),
+      '@components': path.resolve(paths.srcClient, 'components'),
+      '@config': path.resolve(paths.srcClient, 'config'),
+      '@constants': path.resolve(paths.srcClient, 'constants'),
+      '@containers': path.resolve(paths.srcClient, 'containers'),
+      '@hocs': path.resolve(paths.srcClient, 'hocs'),
+      '@models': path.resolve(paths.srcClient, 'models'),
+      '@modules': path.resolve(paths.srcClient, 'modules'),
+      '@selectors': path.resolve(paths.srcClient, 'state', 'selectors'),
+      '@client': path.resolve(paths.srcClient),
+      '@utils': path.resolve(paths.srcClient, 'utils'),
     },
   },
   target: 'web',

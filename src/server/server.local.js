@@ -5,19 +5,19 @@ import { Provider as ReduxProvider } from 'react-redux';
 import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import appConfig from '@config/appConfig';
 import configureStore from '../client/state/configureStore';
 import makeHtml from './makeHtml';
 import RootContainer from '@containers/app/RootContainer/RootContainer.web';
+import webpackConfig from '../../internals/webpack/webpack.config.client.local.web';
 
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-import webpack from 'webpack';
-import webpackConfig from '../../internals/webpack/webpack.config.dev.web';
+console.log(123, webpackConfig);
+
 const webpackCompiler = webpack(webpackConfig);
-
-const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
 
 const PORT = 5001;
 
@@ -33,28 +33,7 @@ const state = {
   status: SERVER_STATUS.NOT_LAUNCHED,
 };
 
-(function getBundles(state) {
-  try {
-    const data = fs.readFileSync(`${DIST_BUNDLE_PATH}/build.json`);
-    const build = JSON.parse(data.toString('utf8'));
-    console.info('[webpack build]: %o', build);
-
-    Object.keys(build.entrypoints)
-      .map((entrypoint) => {
-        build.entrypoints[entrypoint].assets.map((asset) => {
-          asset.endsWith('js') && state.entrypointBundles.push(asset);
-        });
-      });
-      state.status = SERVER_STATUS.LAUNCH_SUCCESS;
-  } catch (err) {
-    console.error(err);
-    state.status = SERVER_STATUS.LAUNCH_ERROR;
-  }
-})();
-
 app.use(htmlLogger);
-
-// app.use(express.static(DIST_BUNDLE_PATH));
 
 app.use(webpackDevMiddleware(webpackCompiler, {
   publicPath: webpackConfig.output.publicPath,

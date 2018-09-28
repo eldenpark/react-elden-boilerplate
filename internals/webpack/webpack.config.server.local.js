@@ -9,7 +9,7 @@ const serverProdConfig = {
   devtool: 'source-map',
   entry: {
     server: [
-      path.join(paths.srcServer, 'server.prod.js'),
+      path.join(paths.srcServer, 'server.local.js'),
     ],
   },
   externals: [
@@ -17,7 +17,7 @@ const serverProdConfig = {
       whitelist: /\.css$/,
     }),
   ],
-  mode: 'production',
+  mode: 'development',
   node: {
     __dirname: false,
   },
@@ -26,7 +26,7 @@ const serverProdConfig = {
   },
   output: {
     path: paths.distServer,
-    filename: 'server.prod.js',
+    filename: 'server.local.js',
     publicPath: '/',
   },
   stats: {
