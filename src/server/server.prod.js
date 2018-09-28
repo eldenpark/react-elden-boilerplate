@@ -9,14 +9,12 @@ import { StaticRouter } from 'react-router-dom';
 import appConfig from '@config/appConfig';
 import configureStore from '../client/state/configureStore';
 import makeHtml from './makeHtml';
-import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 import paths from '../../internals/webpack/paths';
-
-const DIST_BUNDLE_PATH = paths.distBundlePath;
+import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 
 const PORT = 5001;
 
-const SERVER_STATUS = {
+const LAUNCH_STATUS = {
   LAUNCH_ERROR: 'LAUNCH_ERROR',
   LAUNCH_SUCCESS: 'LAUNCH_SUCCESS',
   NOT_LAUNCHED: 'NOT_LAUNCHED',
@@ -24,44 +22,50 @@ const SERVER_STATUS = {
 
 const app = express();
 let state = {
-  entrypointBundles: [],
-  set(nextStatus) {
-    const obj = { 
+  clone(obj) {
+    const newInstance = { 
       ...this,
-      status: nextStatus,
+      ...obj,
      };
-    return obj;
+    return newInstance;
   },
-  status: SERVER_STATUS.NOT_LAUNCHED,
+  entrypointBundles: [],
+  launchStatus: LAUNCH_STATUS.NOT_LAUNCHED,
 };
 
-state = state.set((function calculateNextStatusWhileSearchingForBundles() {
+state = state.clone((function calculateNextStateWhileSearchingForBundles() {
   try {
-    const data = fs.readFileSync(`../bundle/build.json`);
-    const build = JSON.parse(data.toString('utf8'));
+    const _build = fs.readFileSync(`${paths.distBundle}/build.json`);
+    const build = JSON.parse(_build.toString('utf8'));
     console.info('[webpack build retrieval]: %o', build);
 
+    const entrypointBundles = [];
     Object.keys(build.entrypoints)
       .map((entrypoint) => {
         build.entrypoints[entrypoint].assets.map((asset) => {
-          asset.endsWith('js') && state.entrypointBundles.push(asset);
+          asset.endsWith('js') && entrypointBundles.push(asset);
         });
       });
-      return SERVER_STATUS.LAUNCH_SUCCESS;
+      return {
+        entrypointBundles,
+        launchStatus: LAUNCH_STATUS.LAUNCH_SUCCESS,
+      };
   } catch (err) {
     console.error(err);
-    return SERVER_STATUS.LAUNCH_ERROR;
+    return {
+      launchStatus: LAUNCH_STATUS.LAUNCH_ERROR,
+    };
   }
 })());
 
 app.use(htmlLogger);
 
-app.use(express.static('../bundle'));
+app.use(express.static(paths.distBundle));
 
-app.get("/*", (req, res) => {
+app.get("*", (req, res) => {
   const store = configureStore();
 
-  if (state.status !== SERVER_STATUS.LAUNCH_SUCCESS) {
+  if (state.launchStatus !== LAUNCH_STATUS.LAUNCH_SUCCESS) {
     res.writeHead(500);
     res.end('server is not launched');
   } else {
