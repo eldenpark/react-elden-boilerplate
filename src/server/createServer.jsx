@@ -35,11 +35,12 @@ export default function createServer({
   enhance(app, state);
   
   app.get("*", (req, res) => {
+    console.log('fresh request, entrypointBundlers: %j', state.entrypointBundles)
     const store = configureStore();
   
     if (state.launchStatus !== LaunchStatus.LAUNCH_SUCCESS) {
       res.writeHead(500);
-      res.end(util.format('server is not launched, launch_status: %s', state.launchStatus));
+      res.end(util.format('server is not successfully launched, launch_status: %s', state.launchStatus));
     } else {
       const element = (
         <ReduxProvider store={store}>

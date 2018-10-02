@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import LaunchStatus from './constants/LaunchStatus';
 
 export function calculateNextStateWhileSearchingForBundles(entrypoints) {

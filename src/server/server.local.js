@@ -25,6 +25,7 @@ export default createServer({
 
     app.use(webpackHotMiddleware(webpackCompiler, {
       heartbeat: 2000,
+      reload: true,
     }));
 
     app.use((req, res, next) => {
