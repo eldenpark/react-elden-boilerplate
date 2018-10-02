@@ -41,7 +41,7 @@ const Root = ({
         <button onClick={(e) => handleClickNavigate(e, '/foo')}>foo</button>
       </NavBar>
       <div>
-        count
+        count_abcd
         <Count>
           {count}
         </Count>
