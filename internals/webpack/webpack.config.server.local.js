@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
 const clientConfig = require('./webpack.config.client.web');
-const paths = require('./paths');
+const paths = require('../paths');
 
 const serverProdConfig = {
   devtool: 'source-map',
@@ -15,7 +15,7 @@ const serverProdConfig = {
   externals: [
     nodeExternals({
       whitelist: /\.css$/,
-    }),
+    }), 
   ],
   mode: 'development',
   node: {

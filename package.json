@@ -66,7 +66,7 @@
     "build:prod": "npm-run-all --parallel build:client:prod build:server:prod",
     "build:server:local": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:server:local",
     "build:server:prod": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:server:prod",
-    "dev:local": "NODE_ENV=development yarn run build:server:local && node ./dist/server/server.local.js",
+    "dev:local": "NODE_ENV=development yarn run build:server:local && node ./dist/server/server.local",
     "lint": "./node_modules/.bin/eslint ./src",
     "start:prod": "NODE_ENV=production node ./dist/server/server.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"

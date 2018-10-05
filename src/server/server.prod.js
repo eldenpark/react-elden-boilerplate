@@ -9,7 +9,7 @@ import { StaticRouter } from 'react-router-dom';
 import createServer from './createServer';
 import LaunchStatus from './constants/LaunchStatus';
 import { calculateNextStateWhileSearchingForBundles } from './serverUtils';
-import paths from '../../internals/webpack/paths';
+import paths from '../../internals/paths';
 
 export default createServer({
   enhance: (app, state) => {

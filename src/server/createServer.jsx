@@ -11,7 +11,6 @@ import appConfig from '@config/appConfig';
 import configureStore from '../client/state/configureStore';
 import LaunchStatus from './constants/LaunchStatus';
 import makeHtml from './makeHtml';
-import paths from '../../internals/webpack/paths';
 import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 
 export default function createServer({
@@ -29,7 +28,7 @@ export default function createServer({
       }
     },
   };
-  
+
   app.use(htmlLogger);
 
   enhance(app, state);
