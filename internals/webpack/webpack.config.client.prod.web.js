@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const config  = require('./webpack.config.client.web');
 
 const prodConfig = {
-  mode: 'production',
+  mode: 'development', // temp
 };
 
 module.exports = merge(config, prodConfig);

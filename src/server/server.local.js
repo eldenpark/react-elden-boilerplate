@@ -8,25 +8,29 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import { calculateNextStateWhileSearchingForBundles } from './serverUtils';
 import createServer from './createServer';
 import LaunchStatus from './constants/LaunchStatus';
-import webpackConfig from '../../internals/webpack/webpack.config.client.local.web';
+import webpackConfigClientLocalWeb from '../../internals/webpack/webpack.config.client.local.web';
 
 export default createServer({
   enhance: (app, state) => {
-    console.info('server local - webpack configuration', webpackConfig);
-    const webpackCompiler = webpack(webpackConfig);
+    console.info('server local - webpack configuration', webpackConfigClientLocalWeb);
+    const clientWebpackCompiler = webpack(webpackConfigClientLocalWeb);
 
-    app.use(webpackDevMiddleware(webpackCompiler, {
-      publicPath: webpackConfig.output.publicPath,
+    const devMiddleware = webpackDevMiddleware(clientWebpackCompiler, {
+      publicPath: webpackConfigClientLocalWeb.output.publicPath,
       serverSideRender: true,
       stats: {
         color: true,
       },
-    }));
+    });
 
-    app.use(webpackHotMiddleware(webpackCompiler, {
+    const hotMiddleware = webpackHotMiddleware(clientWebpackCompiler, {
       heartbeat: 2000,
       reload: true,
-    }));
+    });
+
+    app.use(devMiddleware);
+
+    app.use(hotMiddleware);
 
     app.use((req, res, next) => {
       if (state.LaunchStatus !== LaunchStatus.NOT_LAUNCHED) {
