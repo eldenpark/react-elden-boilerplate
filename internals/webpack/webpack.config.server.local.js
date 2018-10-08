@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
 const clientConfig = require('./webpack.config.client.web');
-const paths = require('../paths');
+const paths = require('../../src/server/paths');
 
 const serverProdConfig = {
   devtool: 'source-map',
@@ -11,6 +11,7 @@ const serverProdConfig = {
     server: [
       path.join(paths.srcServer, 'server.local.js'),
     ],
+    rootContainer: path.join(paths.srcClient, 'containers/app/RootContainer/RootContainer.web.jsx'),
   },
   externals: [
     nodeExternals({
@@ -26,7 +27,9 @@ const serverProdConfig = {
   },
   output: {
     path: paths.distServer,
-    filename: 'server.local.js',
+    filename: 'server.local.[name].[hash].js',
+    library: '',
+    libraryTarget: 'commonjs',
     publicPath: '/',
   },
   stats: {

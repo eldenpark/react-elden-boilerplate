@@ -5,10 +5,6 @@ const appConfig = {
     graph: false,
     navigation: false,
   },
-  ports: {
-    local: 5001,
-    prod: 5001,
-  },
   reduxStateKey: '__PRELOAED_STATE__',
 };
 

@@ -6,11 +6,15 @@ const DIST_PATH = path.resolve(ROOT_PATH, 'dist');
 const SRC_PATH = path.resolve(ROOT_PATH, 'src');
 const WEBPACK_PATH = path.resolve(ROOT_PATH, 'internals/webpack');
 
-console.log('ROOT_PATH: %s', ROOT_PATH);
-if (ROOT_PATH.substr(-4) === 'gulp') {
-  console.warn(`Current working directory might not be the project root directory.
+(function checkIfCurrentWorkingDirectoryIsCorrect() {
+  console.info('ROOT_PATH', ROOT_PATH);
+  const pJson = fs.existsSync(`${ROOT_PATH}/package.json`);
+  if (!pJson) {
+    console.error(`Current working directory might not be the project root directory.
 Did you call process.chdir() properly?`);
-}
+    process.exit(0);
+  }
+})();
 
 module.exports = {
   distBundle: path.resolve(DIST_PATH, 'bundle'),

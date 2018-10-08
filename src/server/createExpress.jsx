@@ -1,17 +1,10 @@
 import express from "express";
-import fs from 'fs';
-import path from "path";
-import { Provider as ReduxProvider } from 'react-redux';
-import React from "react";
-import { renderToString } from "react-dom/server";
-import { StaticRouter } from 'react-router-dom';
 import util from 'util';
 
-import appConfig from '@config/appConfig';
+// import appConfig from '@config/appConfig';
 import configureStore from '../client/state/configureStore';
 import LaunchStatus from './constants/LaunchStatus';
 import makeHtml from './makeHtml';
-import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 
 export default function createServer({
   enhance = (app, state) => {},
@@ -41,32 +34,19 @@ export default function createServer({
       res.writeHead(500);
       res.end(util.format('server is not successfully launched, launch_status: %s', state.launchStatus));
     } else {
-      const element = (
-        <ReduxProvider store={store}>
-          <StaticRouter 
-            context={{}}
-            location={req.url}>
-            <RootContainer/>
-          </StaticRouter>
-        </ReduxProvider>
-      );
-      const elementInString = renderToString(element);
-  
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(makeHtml({
-        reactDom: elementInString,
-        reduxState: store,
-        reduxStateKey: appConfig.reduxStateKey,
         bundles: state.entrypointBundles,
+        // storeKey: appConfig.reduxStateKey,
+        store,
       }));
     }
   });
   
-  app.listen(appConfig.ports.prod, () => {
-    console.info('Server listening: %s', appConfig.ports.prod);
-  });
-
-  return app;
+  return {
+    app,
+    state,
+  };
 };
 
 function htmlLogger(req, res, next) {

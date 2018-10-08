@@ -2,7 +2,7 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const babelRc = require('../babel/.babelrc');
-const paths = require('../paths');
+const paths = require('../../src/server/paths');
 
 module.exports = {
   context: __dirname,
