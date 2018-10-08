@@ -6,12 +6,12 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
 
-import createServer from './createServer';
-import LaunchStatus from './constants/LaunchStatus';
 import { calculateNextStateWhileSearchingForBundles } from './serverUtils';
-import paths from '../../internals/paths';
+import createExpress from './createExpress';
+import LaunchStatus from './constants/LaunchStatus';
+import paths from './paths';
 
-export default createServer({
+export default createExpress({
   enhance: (app, state) => {
     const _build = fs.readFileSync(`${paths.distBundle}/build.json`);
     const build = JSON.parse(_build.toString('utf8'));

@@ -6,13 +6,13 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import { calculateNextStateWhileSearchingForBundles } from './serverUtils';
-import createServer from './createServer';
+import createExpress from './createExpress';
 import LaunchStatus from './constants/LaunchStatus';
 import webpackConfigClientLocalWeb from '../../internals/webpack/webpack.config.client.local.web';
 
-export default createServer({
+export default createExpress({
   enhance: (app, state) => {
-    console.info('server local - webpack configuration', webpackConfigClientLocalWeb);
+    console.info('server local - enhance, webpack configuration', webpackConfigClientLocalWeb);
     const clientWebpackCompiler = webpack(webpackConfigClientLocalWeb);
 
     const devMiddleware = webpackDevMiddleware(clientWebpackCompiler, {

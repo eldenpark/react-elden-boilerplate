@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 
 const config = require('./webpack.config.client.web');
-const paths = require('../paths');
+const paths = require('../../src/server/paths');
 
 const devConfig = {
   devtool: 'source-map',

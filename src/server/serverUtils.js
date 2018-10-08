@@ -1,6 +1,6 @@
-import LaunchStatus from './constants/LaunchStatus';
+const LaunchStatus = require('./constants/LaunchStatus');
 
-export function calculateNextStateWhileSearchingForBundles(entrypoints) {
+exports.calculateNextStateWhileSearchingForBundles = function (entrypoints) {
   try {
     const entrypointBundles = [];
     Object.keys(entrypoints)

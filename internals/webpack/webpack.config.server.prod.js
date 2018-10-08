@@ -3,7 +3,7 @@ const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
 const clientConfig = require('./webpack.config.client.web');
-const paths = require('../paths');
+const paths = require('../../src/server/paths');
 
 const serverProdConfig = {
   devtool: 'source-map',
@@ -25,8 +25,10 @@ const serverProdConfig = {
     minimize: false,
   },
   output: {
-    path: paths.distServer,
     filename: 'server.prod.js',
+    library: '',
+    libraryTarget: 'commonjs',
+    path: paths.distServer,
     publicPath: '/',
   },
   stats: {
