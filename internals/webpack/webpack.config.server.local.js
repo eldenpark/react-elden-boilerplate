@@ -1,22 +1,18 @@
-const merge = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
-const clientConfig = require('./webpack.config.client.web');
 const paths = require('../../src/server/paths');
+const webpackConfigClientWeb = require('./webpack.config.client.web');
 
-const serverProdConfig = {
+const config = {
   devtool: 'source-map',
   entry: {
-    server: [
-      path.join(paths.srcServer, 'server.local.js'),
-    ],
     rootContainer: path.join(paths.srcClient, 'containers/app/RootContainer/RootContainer.web.jsx'),
   },
   externals: [
     nodeExternals({
       whitelist: /\.css$/,
-    }), 
+    }),
   ],
   mode: 'development',
   node: {
@@ -27,7 +23,7 @@ const serverProdConfig = {
   },
   output: {
     path: paths.distServer,
-    filename: 'server.local.[name].[hash].js',
+    filename: 'server.local.[name].js',
     library: '',
     libraryTarget: 'commonjs',
     publicPath: '/',
@@ -38,4 +34,4 @@ const serverProdConfig = {
   target: 'node',
 };
 
-module.exports = Object.assign(clientConfig, serverProdConfig);
+module.exports = Object.assign({}, webpackConfigClientWeb, config);

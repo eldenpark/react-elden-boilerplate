@@ -1,4 +1,3 @@
-const htmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
 const babelRc = require('../babel/.babelrc');
@@ -61,31 +60,12 @@ module.exports = {
     publicPath: '/',
   },
   plugins: [
-    // new htmlWebpackPlugin({
-    //   filename: 'raw_index.html',
-    //   template: INDEX_PATH,
-    // }),
   ],
   resolve: {
     modules: [
       'node_modules',
     ],
     extensions: ['.js', '.jsx'],
-    alias: {
-      '@actions': path.resolve(paths.srcClient, 'state', 'actions'),
-      '@apis': path.resolve(paths.srcClient, 'apis'),
-      '@app-assets': path.resolve(paths.srcClient, 'app-assets'),
-      '@components': path.resolve(paths.srcClient, 'components'),
-      '@config': path.resolve(paths.srcClient, 'config'),
-      '@constants': path.resolve(paths.srcClient, 'constants'),
-      '@containers': path.resolve(paths.srcClient, 'containers'),
-      '@hocs': path.resolve(paths.srcClient, 'hocs'),
-      '@models': path.resolve(paths.srcClient, 'models'),
-      '@modules': path.resolve(paths.srcClient, 'modules'),
-      '@selectors': path.resolve(paths.srcClient, 'state', 'selectors'),
-      '@client': path.resolve(paths.srcClient),
-      '@utils': path.resolve(paths.srcClient, 'utils'),
-    },
   },
   target: 'web',
 };

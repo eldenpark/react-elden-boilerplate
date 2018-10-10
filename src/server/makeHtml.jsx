@@ -1,35 +1,55 @@
-import { Provider as ReduxProvider } from 'react-redux';
+import fs from 'fs';
 import React from "react";
+import { Provider as ReduxProvider } from 'react-redux';
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
 
 import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 
 const App = ({
+  localServer,
   requestUrl,
+  rootContainerPath = '',
   store,
 }) => {
+  console.log('[info] App rootContainerPath: %s', rootContainerPath);
+  let RootContainerComponent;
+  try {
+    RootContainerComponent = localServer
+      ? require(rootContainerPath).default
+      : require('@containers/app/RootContainer/RootContainer.web').default;
+  } catch (err) {
+    console.error('[App] cannot find rootContainer at: %s', rootContainerPath, err);
+    return () => <div>RootContainer not found</div>;
+  }
+
   return (
     <ReduxProvider store={store}>
       <StaticRouter
         context={{}}
-        location={requestUrl}>
-        <RootContainer/>
+        location={requestUrl}
+      >
+        <RootContainerComponent/>
       </StaticRouter>
     </ReduxProvider>
   );
 };
   
 export default function makeHtml({
-  bundles,
+  entrypointBundles,
+  localServer = false,
   requestUrl = '',
+  rootContainerPath = '',
   store,
   storeKey = 'REDUX_STATE_KEY__NOT_DEFINED',
 }) {
   const element = (
     <App
+      localServer={localServer}
       requestUrl={requestUrl}
-      store={store}/>
+      rootContainerPath={rootContainerPath}
+      store={store}
+    />
   );
   const elementInString = renderToString(element);
 
@@ -45,7 +65,7 @@ export default function makeHtml({
       <script>
         window['${storeKey}'] = ${JSON.stringify(store)};
       </script>
-      ${createScripts(bundles)}
+      ${createScripts(entrypointBundles)}
     </body>
     </html>
   `;

@@ -1,11 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
 
-const config = require('./webpack.config.client.web');
 const paths = require('../../src/server/paths');
+const webpackConfigClientWeb = require('./webpack.config.client.web');
 
-const devConfig = {
+const config = {
   devtool: 'source-map',
   entry: {
     app: [ 
@@ -26,4 +25,4 @@ const devConfig = {
   ],
 };
 
-module.exports = merge(config, devConfig);
+module.exports = Object.assign({}, webpackConfigClientWeb, config);

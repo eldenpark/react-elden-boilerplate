@@ -8,7 +8,9 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import { calculateNextStateWhileSearchingForBundles } from './serverUtils';
 import createExpress from './createExpress';
 import LaunchStatus from './constants/LaunchStatus';
-import webpackConfigClientLocalWeb from '../../internals/webpack/webpack.config.client.local.web';
+import paths from './paths';
+
+const webpackConfigClientLocalWeb = require(paths.webpackConfigClientLocalWeb)
 
 export default createExpress({
   enhance: (app, state) => {
@@ -33,16 +35,18 @@ export default createExpress({
     app.use(hotMiddleware);
 
     app.use((req, res, next) => {
-      if (state.LaunchStatus !== LaunchStatus.NOT_LAUNCHED) {
-        const info = res.locals.webpackStats.toJson({
-          all: false,
-          assets: true,
-          builtAt: true,
-          entrypoints: true,
-        });
-        state.update(calculateNextStateWhileSearchingForBundles(info.entrypoints));
-      }
-      next();
+      (function updateEntrypointsIfServerIsLaunched() {
+        if (state.launchStatus !== LaunchStatus.NOT_LAUNCHED) {
+          const info = res.locals.webpackStats.toJson({
+            all: false,
+            assets: true,
+            builtAt: true,
+            entrypoints: true,
+          });
+          state.update(calculateNextStateWhileSearchingForBundles(info.entrypoints));
+        }
+        next();
+      })();
     });
   },
 });

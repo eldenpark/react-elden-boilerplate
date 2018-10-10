@@ -1,5 +1,6 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { hot } from 'react-hot-loader';
 import PropTypes from 'prop-types';
 import * as React from 'react';
 import { withRouter } from "react-router-dom";
@@ -57,6 +58,7 @@ const makeMapStateToProps = () => {
 };
 
 export default compose(
+  hot(module),
   withRouter,
   connect(makeMapStateToProps),
 )(RootContainer);

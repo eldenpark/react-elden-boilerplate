@@ -14,52 +14,61 @@ const webpack = require('webpack');
 const babelRc = require('../babel/.babelrc');
 const paths = require('../../src/server/paths');
 
-const DIST_PATH = path.resolve(__dirname, '../../dist');
-const DIST_BUNDLE_PATH = path.resolve(__dirname, '../../dist/bundle');
-const LOG_PATH = path.resolve(__dirname, '../../logs');
-const SRC_PATH = path.resolve(__dirname, '../../src');
+const Task = {
+  WEBPACK_CLIENT_PROD: 'webpack:client:prod',
+};
 
 gulp.task('babel', () => {
-  console.info('[babel], DIST_PATH: %s, SRC_PATH: %s', DIST_PATH, SRC_PATH);
+  console.info(
+    '[babel], NODE_ENV: %s, DIST_PATH: %s, SRC_PATH: %s', 
+    process.env.NODE_ENV, 
+    paths.distBabel, 
+    paths.src,
+  );
 
-  return gulp.src([`${SRC_PATH}/**/*.{js,jsx}`])
+  return gulp.src([`${paths.src}/**/*.{js,jsx}`])
     .pipe(sourcemaps.init())
     .pipe(babel(babelRc))
     .pipe(sourcemaps.write('.'))
-		.pipe(gulp.dest(DIST_PATH));
+		.pipe(gulp.dest(paths.distBabel));
 });
 
-gulp.task('clean:client', () => {
-  console.info('[clean] Remove all the contents in %s', DIST_PATH);
+gulp.task('clean:babel', () => {
+  console.info('[clean] Remove all the contents in %s', paths.distBabel);
 
   return del([
-    `${DIST_PATH}/bundle/**/*`,
+    `${paths.distBabel}/**/*`,
   ]);
 });
 
-gulp.task('clean:server', () => {
-  console.info('[clean] Remove all the contents in %s', DIST_PATH);
+gulp.task('clean:bundle', () => {
+  console.info('[clean] Remove all the contents in %s', paths.distBundle);
 
   return del([
-    `${DIST_PATH}/server/**/*`,
-    `${DIST_PATH}/client/**/*`,
+    `${paths.distBundle}/**/*`,
   ]);
 });
 
 gulp.task('emptylog', () => {
-  console.info('[emptylog] LOG_PATH: %s', LOG_PATH);
+  console.info('[emptylog] LOG_PATH: %s', paths.logs);
 
   return del([
-    `${LOG_PATH}/**/*`,
+    `${paths.logs}/**/*`,
   ]);
 });
 
-gulp.task('webpack:client:prod', (done) => {
-  const webpackConfig = require(paths.webpackClientProdWeb);
+gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
+  let webpackConfig = undefined;
+  try {
+    webpackConfig = require(paths.webpackConfigClientProdWeb);
+  } catch (err) {
+    console.error(`${Task.WEBPACK_CLIENT_PROD} webpack config is not found`);
+    done(new Error(err));
+  }
   const compiler = webpack(webpackConfig);
 
   compiler.run((err, stats) => {
-    console.info('[webpack:client:prod] webpack configuration:\n%o\n', webpackConfig);
+    console.info(`${Task.WEBPACK_CLIENT_PROD} webpack configuration:\n%o\n`, webpackConfig);
     if (err || stats.hasErrors()) {
       const errorMsg = stats.toString('errors-only');
       console.error(errorMsg);
@@ -72,60 +81,11 @@ gulp.task('webpack:client:prod', (done) => {
         entrypoints: true,
       });
       console.info('[webpack:client:prod] compilation success:\n%o\n', info);
-      fs.writeFileSync(`${DIST_BUNDLE_PATH}/build.json`, JSON.stringify(info));
+      fs.writeFileSync(`${paths.distBundle}/build.json`, JSON.stringify(info));
       done();
     }
   });
 });
 
-gulp.task('webpack:server:local', (done) => {
-  const webpackConfig = require(paths.webpackServerLocal);
-  const compiler = webpack(webpackConfig);
-
-  compiler.run((err, stats) => {
-    console.info('[webpack:server:local] webpack configuration:\n%o\n', webpackConfig);
-    if (err || stats.hasErrors()) {
-      const errorMsg = stats.toString('errors-only')
-      console.error(errorMsg);
-      done(new Error(errorMsg));
-    } else {
-      const info = stats.toJson({
-        all: false,
-        assets: true,
-        builtAt: true,
-        entrypoints: true,
-      });
-      console.info('[webpack:server:prod] compilation success:\n%o\n', info);
-      // fs.writeFileSync(`${DIST_BUNDLE_PATH}/build.json`, JSON.stringify(info));
-      done();
-    }
-  });
-});
-
-gulp.task('webpack:server:prod', (done) => {
-  const webpackConfig = require('../webpack/webpack.config.server.prod');
-  const compiler = webpack(webpackConfig);
-
-  compiler.run((err, stats) => {
-    console.info('[webpack:server:prod] webpack configuration:\n%o\n', webpackConfig);
-    if (err || stats.hasErrors()) {
-      const errorMsg = stats.toString('errors-only');
-      console.error(errorMsg);
-      done(new Error(errorMsg));
-    } else {
-      const info = stats.toJson({
-        all: false,
-        assets: true,
-        builtAt: true,
-        entrypoints: true,
-      });
-      console.info('[webpack:server:prod] compilation success:\n%o\n', info);
-      // fs.writeFileSync(`${DIST_BUNDLE_PATH}/build.json`, JSON.stringify(info));
-      done();
-    }
-  });
-});
-
-gulp.task('build:client:prod', gulp.series('clean:client', 'webpack:client:prod'));
-gulp.task('build:server:prod', gulp.series('clean:server', 'webpack:server:prod'));
-gulp.task('build:server:local', gulp.series('clean:server', 'webpack:server:local'));
+gulp.task('build:client:prod', gulp.series('clean:bundle', 'webpack:client:prod'));
+gulp.task('build:server', gulp.series('clean:babel', 'babel'));
