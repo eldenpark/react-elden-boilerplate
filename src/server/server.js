@@ -4,31 +4,37 @@ const express = require('express');
 const http = require('http');
 const path = require('path');
 const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
 
-const calculateNextStateWhileSearchingForBundles = require('./serverUtils').calculateNextStateWhileSearchingForBundles;
+const LaunchStatus = require('./constants/LaunchStatus');
 const paths = require('./paths');
-const webpackConfigClientLocalWeb = require(paths.webpackClientLocalWeb);
-const webpackConfigServerLocal = require(paths.webpackServerLocal);
+const webpackConfigServerLocal = require(paths.webpackConfigServerLocal);
 
-const devEnv = process.env.NODE_ENV === 'development';
+const prodEnv = process.env.NODE_ENV === 'production' || false;
+let httpServer = undefined;
 
-devEnv ? launchLocalServer() : launchProdServer();
+console.info('NODE_ENV: %s', process.env.NODE_ENV);
+
+prodEnv ? launchProdServer() : launchLocalServer();
 
 function launchLocalServer() {
+  del.sync([
+    paths.distServer,
+  ]);
+
   const serverWebpackCompiler = webpack(webpackConfigServerLocal);
   const watchOptions = {
     aggregateTimeout: 2000,
     poll: undefined,
   };
 
-  del.sync([
-    paths.distServer,
-  ]);
+  const server = require('./server.local').default;
+  const state = server.state;
+  state.update({
+    localServer: true,
+  });
+  runHttpServer(server.app);
 
   serverWebpackCompiler.watch(watchOptions, (err, stats) => {
-    console.info('[webpack:server:local] webpack configuration:\n%o\n', webpackConfigServerLocal);
     if (err || stats.hasErrors()) {
       const errorMsg = stats.toString('errors-only');
       console.error(errorMsg);
@@ -38,28 +44,40 @@ function launchLocalServer() {
         assets: true,
         builtAt: true,
         entrypoints: true,
+      }); 
+      console.info('[webpack:server:local] webpack watch() success: at: %s, \n%o\n', new Date(), info);
+      
+      delete require.cache[state.rootContainerPath];
+      printRequireCache();
+      
+      const rootContainerBundlePath = path.resolve(paths.distServer, info.entrypoints.rootContainer.assets[0]);
+      state.update({
+        launchStatus: LaunchStatus.LAUNCH_SUCCESS,
+        rootContainerPath: rootContainerBundlePath,
       });
-
-      const entrypointBundles = calculateNextStateWhileSearchingForBundles(info.entrypoints).entrypointBundles;
-      console.log(123, entrypointBundles[1]);
-
-      console.info('[webpack:server:local] compilation success:\n%o\n', info);
-      console.info('[webpack:server:local] compilation success lately at: %s', new Date());
-
-      const server = require('../../dist/server/' + entrypointBundles[0]).default;
-      runHttpServer(server.app);
     }
   });
 }
 
 function launchProdServer() {
-  const server = require('../../dist/server/server.prod.js').default;
+  const server = require('./server.prod').default;
   runHttpServer(server.app);
 }
 
 function runHttpServer(app) {
-  const httpServer = http.createServer(app);
-  httpServer.listen(5001, () => {
-    console.log('Listening on 5001');
-  });
+  if (httpServer !== undefined) {
+    console.info('[httpServer] http server is already running');
+  } else {
+    httpServer = http.createServer(app);
+    httpServer.listen(5001, () => {
+      console.log('Listening on 5001');
+    });
+  }
+}
+
+function printRequireCache() {
+  return Object.keys(require.cache)
+    .filter((key) => {
+      return !key.startsWith('/Users/mistock1706/work/Eldeni/react-boilerplate/node_modules/');
+    });
 }

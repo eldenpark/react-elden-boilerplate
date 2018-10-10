@@ -1,11 +1,10 @@
-const merge = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const path = require('path');
 
-const clientConfig = require('./webpack.config.client.web');
 const paths = require('../../src/server/paths');
+const webpackConfigClientWeb = require('./webpack.config.client.web');
 
-const serverProdConfig = {
+const config = {
   devtool: 'source-map',
   entry: {
     server: [
@@ -17,7 +16,7 @@ const serverProdConfig = {
       whitelist: /\.css$/,
     }),
   ],
-  mode: 'development', // temp
+  mode: 'development',
   node: {
     __dirname: false,
   },
@@ -37,4 +36,4 @@ const serverProdConfig = {
   target: 'node',
 };
 
-module.exports = Object.assign(clientConfig, serverProdConfig);
+module.exports = Object.assign({}, webpackConfigClientWeb, config);

@@ -1,11 +1,10 @@
-const merge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
 
-const config  = require('./webpack.config.client.web');
+const webpackConfigClientWeb  = require('./webpack.config.client.web');
 
-const prodConfig = {
-  mode: 'development', // temp
+const config = {
+  mode: 'production',
 };
 
-module.exports = merge(config, prodConfig);
+module.exports = Object.assign({}, webpackConfigClientWeb, config);

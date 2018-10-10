@@ -17,12 +17,16 @@ Did you call process.chdir() properly?`);
 })();
 
 module.exports = {
+  dist: DIST_PATH,
+  distBabel: path.resolve(DIST_PATH, 'babel'),
   distBundle: path.resolve(DIST_PATH, 'bundle'),
   distServer: path.resolve(DIST_PATH, 'server'),
+  logs: path.resolve(ROOT_PATH, 'logs'),
+  src: SRC_PATH,
   srcClient: path.resolve(SRC_PATH, 'client'),
   srcServer: path.resolve(SRC_PATH, 'server'),
-  webpackClientLocalWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.local.web'),
-  webpackClientProdWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.prod.web'),
-  webpackServerLocal: path.resolve(WEBPACK_PATH, 'webpack.config.server.local'),
-  webpackServerProd: path.resolve(WEBPACK_PATH, 'webpack.config.server.prod'),
+  webpackConfigClientLocalWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.local.web.js'),
+  webpackConfigClientProdWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.prod.web'),
+  webpackConfigServerLocal: path.resolve(WEBPACK_PATH, 'webpack.config.server.local'),
+  webpackConfigServerProd: path.resolve(WEBPACK_PATH, 'webpack.config.server.prod'),
 };

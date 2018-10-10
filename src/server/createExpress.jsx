@@ -13,7 +13,10 @@ export default function createServer({
   let state = {
     entrypointBundles: [],
     launchStatus: LaunchStatus.NOT_LAUNCHED,
+    localServer: false,
+    rootContainerPath: undefined,
     update(obj = {}) {
+      console.info('[state], state will update with: %o', obj);
       for (let key in this) {
         if (obj[key]) {
           this[key] = obj[key];
@@ -27,18 +30,23 @@ export default function createServer({
   enhance(app, state);
   
   app.get("*", (req, res) => {
-    console.log('fresh request, entrypointBundlers: %j', state.entrypointBundles)
+    console.log('fresh request, entrypointBundlers: %j', state)
     const store = configureStore();
   
     if (state.launchStatus !== LaunchStatus.LAUNCH_SUCCESS) {
       res.writeHead(500);
       res.end(util.format('server is not successfully launched, launch_status: %s', state.launchStatus));
+    } else if (state.localServer && state.rootContainerPath === undefined) {
+      res.end("not yet loaded");
     } else {
       res.writeHead(200, { "Content-Type": "text/html" });
       res.end(makeHtml({
-        bundles: state.entrypointBundles,
-        // storeKey: appConfig.reduxStateKey,
+        entrypointBundles: state.entrypointBundles,
+        localServer: state.localServer,
+        requestUrl: req.url,
+        rootContainerPath: state.rootContainerPath,
         store,
+        // storeKey: appConfig.reduxStateKey,
       }));
     }
   });
