@@ -29,6 +29,7 @@ module.exports = {
           "@models": "./src/client/models",
           "@modules": "./src/client/modules",
           "@selectors": "./src/client/state/selectors",
+          "@server": "./src/server",
           "@utils": "./src/client/utils",
         },
       }

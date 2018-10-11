@@ -6,10 +6,10 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
 
-import { calculateNextStateWhileSearchingForBundles } from './serverUtils';
-import createExpress from './createExpress';
-import LaunchStatus from './constants/LaunchStatus';
-import paths from './paths';
+import { calculateNextStateWhileSearchingForBundles } from '@server/serverApp/serverUtils';
+import createExpress from '@server/serverApp/createExpress';
+import LaunchStatus from '@server/constants/LaunchStatus';
+import paths from '@server/paths';
 
 export default createExpress({
   enhance: (app, state) => {

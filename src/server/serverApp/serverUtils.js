@@ -1,4 +1,4 @@
-const LaunchStatus = require('./constants/LaunchStatus');
+const LaunchStatus = require('@server/constants/LaunchStatus');
 
 exports.calculateNextStateWhileSearchingForBundles = function (entrypoints) {
   try {
@@ -20,4 +20,12 @@ exports.calculateNextStateWhileSearchingForBundles = function (entrypoints) {
       launchStatus: LaunchStatus.ERROR_BUNDLE_NOT_FOUND,
     };
   }
+};
+
+exports.printRequireCache = function () {
+  const keys = Object.keys(require.cache)
+    .filter((key) => {
+      return !key.includes('/node_modules/');
+    });
+  console.info("require.cache: ", keys);
 };

@@ -2,9 +2,9 @@ import express from "express";
 import util from 'util';
 
 // import appConfig from '@config/appConfig';
-import configureStore from '../client/state/configureStore';
-import LaunchStatus from './constants/LaunchStatus';
-import makeHtml from './makeHtml';
+import configureStore from '@client/state/configureStore';
+import LaunchStatus from '@server/constants/LaunchStatus';
+import makeHtml from '@server/serverApp/makeHtml';
 
 export default function createServer({
   enhance = (app, state) => {},
