@@ -4,8 +4,6 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
 
-import RootContainer from '@containers/app/RootContainer/RootContainer.web';
-
 const App = ({
   localServer,
   requestUrl,

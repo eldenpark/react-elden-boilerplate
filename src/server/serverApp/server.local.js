@@ -5,10 +5,10 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import { calculateNextStateWhileSearchingForBundles } from './serverUtils';
-import createExpress from './createExpress';
-import LaunchStatus from './constants/LaunchStatus';
-import paths from './paths';
+import { calculateNextStateWhileSearchingForBundles } from '@server/serverApp/serverUtils';
+import createExpress from '@server/serverApp/createExpress';
+import LaunchStatus from '@server/constants/LaunchStatus';
+import paths from '@server/paths';
 
 const webpackConfigClientLocalWeb = require(paths.webpackConfigClientLocalWeb)
 

@@ -5,9 +5,10 @@ const http = require('http');
 const path = require('path');
 const webpack = require('webpack');
 
-const LaunchStatus = require('./constants/LaunchStatus');
-const paths = require('./paths');
+const LaunchStatus = require('@server/constants/LaunchStatus');
+const paths = require('@server/paths');
 const webpackConfigServerLocal = require(paths.webpackConfigServerLocal);
+const serverUtils = require('@server/serverApp/serverUtils');
 
 const prodEnv = process.env.NODE_ENV === 'production' || false;
 let httpServer = undefined;
@@ -27,7 +28,7 @@ function launchLocalServer() {
     poll: undefined,
   };
 
-  const server = require('./server.local').default;
+  const server = require('@server/serverApp/server.local').default;
   const state = server.state;
   state.update({
     localServer: true,
@@ -48,7 +49,7 @@ function launchLocalServer() {
       console.info('[webpack:server:local] webpack watch() success: at: %s, \n%o\n', new Date(), info);
       
       delete require.cache[state.rootContainerPath];
-      printRequireCache();
+      serverUtils.printRequireCache();
       
       const rootContainerBundlePath = path.resolve(paths.distServer, info.entrypoints.rootContainer.assets[0]);
       state.update({
@@ -60,7 +61,7 @@ function launchLocalServer() {
 }
 
 function launchProdServer() {
-  const server = require('./server.prod').default;
+  const server = require('@server/serverApp/server.prod').default;
   runHttpServer(server.app);
 }
 
@@ -76,8 +77,9 @@ function runHttpServer(app) {
 }
 
 function printRequireCache() {
-  return Object.keys(require.cache)
+  const keys = Object.keys(require.cache)
     .filter((key) => {
-      return !key.startsWith('/Users/mistock1706/work/Eldeni/react-boilerplate/node_modules/');
+      return !key.includes('/node_modules/');
     });
+  console.info("require.cache: ", keys);
 }
