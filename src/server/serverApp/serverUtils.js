@@ -22,10 +22,9 @@ exports.calculateNextStateWhileSearchingForBundles = function (entrypoints) {
   }
 };
 
-exports.printRequireCache = function () {
-  const keys = Object.keys(require.cache)
+exports.getProperRequireCache = function () {
+  return Object.keys(require.cache)
     .filter((key) => {
       return !key.includes('/node_modules/');
     });
-  console.info("require.cache: ", keys);
 };
