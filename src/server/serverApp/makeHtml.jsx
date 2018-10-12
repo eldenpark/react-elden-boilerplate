@@ -4,20 +4,22 @@ import { Provider as ReduxProvider } from 'react-redux';
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
 
+import Log from '@server/modules/Log';
+
 const App = ({
   localServer,
   requestUrl,
   rootContainerPath = '',
   store,
 }) => {
-  console.log('[info] App rootContainerPath: %s', rootContainerPath);
+  Log.info('<App/> with rootContainerPath: %s', rootContainerPath);
   let RootContainerComponent;
   try {
     RootContainerComponent = localServer
       ? require(rootContainerPath).default
       : require('@containers/app/RootContainer/RootContainer.web').default;
   } catch (err) {
-    console.error('[App] cannot find rootContainer at: %s', rootContainerPath, err);
+    Log.error('<App/> cannot find rootContainer at: %s', rootContainerPath, err);
     return () => <div>RootContainer not found</div>;
   }
 

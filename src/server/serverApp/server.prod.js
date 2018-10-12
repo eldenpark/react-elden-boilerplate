@@ -10,12 +10,13 @@ import { calculateNextStateWhileSearchingForBundles } from '@server/serverApp/se
 import createExpress from '@server/serverApp/createExpress';
 import LaunchStatus from '@server/constants/LaunchStatus';
 import paths from '@server/paths';
+import { webpackLog } from '@server/modules/Log';
 
 export default createExpress({
   enhance: (app, state) => {
     const _build = fs.readFileSync(`${paths.distBundle}/build.json`);
     const build = JSON.parse(_build.toString('utf8'));
-    console.info('server prod - webpack configuration', build);
+    webpackLog.info('enhance(), build at distBudle %j', build);
 
     state.update(calculateNextStateWhileSearchingForBundles(build.entrypoints));
   

@@ -9,12 +9,13 @@ import { calculateNextStateWhileSearchingForBundles } from '@server/serverApp/se
 import createExpress from '@server/serverApp/createExpress';
 import LaunchStatus from '@server/constants/LaunchStatus';
 import paths from '@server/paths';
+import { webpackLog } from '@server/modules/Log';
 
 const webpackConfigClientLocalWeb = require(paths.webpackConfigClientLocalWeb)
 
 export default createExpress({
   enhance: (app, state) => {
-    console.info('server local - enhance, webpack configuration', webpackConfigClientLocalWeb);
+    webpackLog.info('enhance(), webpackConfigClientLocalWeb', webpackConfigClientLocalWeb);
     const clientWebpackCompiler = webpack(webpackConfigClientLocalWeb);
 
     const devMiddleware = webpackDevMiddleware(clientWebpackCompiler, {

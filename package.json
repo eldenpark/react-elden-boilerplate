@@ -4,6 +4,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "browser-cookies": "^1.2.0",
+    "chalk": "^2.4.1",
     "express": "^4.16.2",
     "moment": "^2.20.1",
     "morgan": "^1.9.0",
@@ -21,7 +22,9 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
     "reselect": "^3.0.1",
-    "styled-components": "^3.1.6"
+    "styled-components": "^3.1.6",
+    "winston": "3",
+    "winston-daily-rotate-file": "^3.3.3"
   },
   "description": "",
   "devDependencies": {
@@ -64,7 +67,7 @@
     "build:client:prod": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:client:prod",
     "build:prod": "NODE_ENV=production npm-run-all --parallel build:client:prod build:server",
     "build:server": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:server",
-    "dev:local": "yarn run build:server && NODE_ENV=development node ./dist/babel/server/server.js",
+    "dev:local": "NODE_ENV=development yarn run build:server && NODE_ENV=development node ./dist/babel/server/server.js",
     "lint": "./node_modules/.bin/eslint ./src",
     "start:prod": "NODE_ENV=production node ./dist/babel/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"

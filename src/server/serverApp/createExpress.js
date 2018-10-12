@@ -1,9 +1,9 @@
 import express from "express";
 import util from 'util';
 
-// import appConfig from '@config/appConfig';
 import configureStore from '@client/state/configureStore';
 import LaunchStatus from '@server/constants/LaunchStatus';
+import Log, { httpLog, stateLog } from '@server/modules/Log';
 import makeHtml from '@server/serverApp/makeHtml';
 
 export default function createServer({
@@ -16,7 +16,7 @@ export default function createServer({
     localServer: false,
     rootContainerPath: undefined,
     update(obj = {}) {
-      console.info('[state], state will update with: %o', obj);
+      stateLog.info('state will update with: %o', obj);
       for (let key in this) {
         if (obj[key]) {
           this[key] = obj[key];
@@ -30,7 +30,7 @@ export default function createServer({
   enhance(app, state);
   
   app.get("*", (req, res) => {
-    console.log('fresh request, entrypointBundlers: %j', state)
+    httpLog.debug('"*" route, entrypointBundlers: %j', state)
     const store = configureStore();
   
     if (state.launchStatus !== LaunchStatus.LAUNCH_SUCCESS) {
@@ -58,6 +58,6 @@ export default function createServer({
 };
 
 function htmlLogger(req, res, next) {
-  console.info('%s url: %s, user agent: %s', new Date(), req.url, req.get('User-Agent'));
+  httpLog.debug('%s url: %s, user agent: %s', new Date(), req.url, req.get('User-Agent'));
   next();
 }

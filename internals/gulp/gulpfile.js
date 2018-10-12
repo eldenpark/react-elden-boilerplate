@@ -4,23 +4,34 @@
 })();
 
 const babel = require('gulp-babel');
+const chalk = require('chalk');
 const del = require('del');
 const fs = require('fs');
 const gulp = require('gulp');
 const path = require('path');
 const sourcemaps = require('gulp-sourcemaps');
+const util = require('util');
 const webpack = require('webpack');
 
 const babelRc = require('../babel/.babelrc');
 const paths = require('../../src/server/paths');
 
+const buildLog = (tag, ...args) => {
+  console.info(chalk.cyan(`[build - ${tag}]`), util.format(...args));
+}
+
 const Task = {
+  BABEL: 'babel',
+  CLEAN_BABEL: 'clean:babel',
+  CLEAN_BUNDLE: 'clean:bundle',
+  EMPTYLOG: 'emptylog',
   WEBPACK_CLIENT_PROD: 'webpack:client:prod',
 };
 
-gulp.task('babel', () => {
-  console.info(
-    '[babel], NODE_ENV: %s, DIST_PATH: %s, SRC_PATH: %s', 
+gulp.task(Task.BABEL, () => {
+  buildLog(
+    Task.BABEL,
+    'NODE_ENV: %s, DIST_PATH: %s, SRC_PATH: %s',
     process.env.NODE_ENV, 
     paths.distBabel, 
     paths.src,
@@ -33,24 +44,24 @@ gulp.task('babel', () => {
 		.pipe(gulp.dest(paths.distBabel));
 });
 
-gulp.task('clean:babel', () => {
-  console.info('[clean] Remove all the contents in %s', paths.distBabel);
+gulp.task(Task.CLEAN_BABEL, () => {
+  buildLog(Task.CLEAN_BABEL,'Remove all the contents in %s', paths.distBabel);
 
   return del([
     `${paths.distBabel}/**/*`,
   ]);
 });
 
-gulp.task('clean:bundle', () => {
-  console.info('[clean] Remove all the contents in %s', paths.distBundle);
+gulp.task(Task.CLEAN_BUNDLE, () => {
+  buildLog(Task.CLEAN_BUNDLE, 'Remove all the contents in %s', paths.distBundle);
 
   return del([
     `${paths.distBundle}/**/*`,
   ]);
 });
 
-gulp.task('emptylog', () => {
-  console.info('[emptylog] LOG_PATH: %s', paths.logs);
+gulp.task(Task.EMPTYLOG, () => {
+  buildLog.info(Task.EMPTYLOG, 'LOG_PATH: %s', paths.logs);
 
   return del([
     `${paths.logs}/**/*`,
@@ -62,16 +73,16 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
   try {
     webpackConfig = require(paths.webpackConfigClientProdWeb);
   } catch (err) {
-    console.error(`${Task.WEBPACK_CLIENT_PROD} webpack config is not found`);
+    buildLog(Task.WEBPACK_CLIENT_PROD, 'error, webpack config is not found');
     done(new Error(err));
   }
   const compiler = webpack(webpackConfig);
 
   compiler.run((err, stats) => {
-    console.info(`${Task.WEBPACK_CLIENT_PROD} webpack configuration:\n%o\n`, webpackConfig);
+    buildLog(Task.WEBPACK_CLIENT_PROD, 'webpack configuration:\n%o\n', webpackConfig);
     if (err || stats.hasErrors()) {
       const errorMsg = stats.toString('errors-only');
-      console.error(errorMsg);
+      buildLog(Task.WEBPACK_CLIENT_PROD, 'error', errorMsg);
       done(new Error(errorMsg));
     } else {
       const info = stats.toJson({
@@ -80,7 +91,7 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
         builtAt: true,
         entrypoints: true,
       });
-      console.info('[webpack:client:prod] compilation success:\n%o\n', info);
+      buildLog(Task.WEBPACK_CLIENT_PROD, 'compilation success:\n%o\n', info);
       fs.writeFileSync(`${paths.distBundle}/build.json`, JSON.stringify(info));
       done();
     }

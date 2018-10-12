@@ -6,6 +6,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const LaunchStatus = require('@server/constants/LaunchStatus');
+const { launchLog, webpackLog } = require('@server/modules/Log');
 const paths = require('@server/paths');
 const webpackConfigServerLocal = require(paths.webpackConfigServerLocal);
 const serverUtils = require('@server/serverApp/serverUtils');
@@ -13,7 +14,7 @@ const serverUtils = require('@server/serverApp/serverUtils');
 const prodEnv = process.env.NODE_ENV === 'production' || false;
 let httpServer = undefined;
 
-console.info('NODE_ENV: %s', process.env.NODE_ENV);
+launchLog.info('NODE_ENV: %s', process.env.NODE_ENV);
 
 prodEnv ? launchProdServer() : launchLocalServer();
 
@@ -38,7 +39,7 @@ function launchLocalServer() {
   serverWebpackCompiler.watch(watchOptions, (err, stats) => {
     if (err || stats.hasErrors()) {
       const errorMsg = stats.toString('errors-only');
-      console.error(errorMsg);
+      webpackLog.error(errorMsg);
     } else {
       const info = stats.toJson({
         all: false,
@@ -46,10 +47,10 @@ function launchLocalServer() {
         builtAt: true,
         entrypoints: true,
       }); 
-      console.info('[webpack:server:local] webpack watch() success: at: %s, \n%o\n', new Date(), info);
+      webpackLog.info('webpack watch() success: at: %s, \n%o', new Date(), info);
       
       delete require.cache[state.rootContainerPath];
-      serverUtils.printRequireCache();
+      webpackLog.info('require cache: ', serverUtils.getProperRequireCache());
       
       const rootContainerBundlePath = path.resolve(paths.distServer, info.entrypoints.rootContainer.assets[0]);
       state.update({
@@ -67,19 +68,11 @@ function launchProdServer() {
 
 function runHttpServer(app) {
   if (httpServer !== undefined) {
-    console.info('[httpServer] http server is already running');
+    launchLog.info('[httpServer] http server is already running');
   } else {
     httpServer = http.createServer(app);
     httpServer.listen(5001, () => {
-      console.log('Listening on 5001');
+      launchLog.info('Listening on 5001');
     });
   }
-}
-
-function printRequireCache() {
-  const keys = Object.keys(require.cache)
-    .filter((key) => {
-      return !key.includes('/node_modules/');
-    });
-  console.info("require.cache: ", keys);
 }
