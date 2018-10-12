@@ -38,8 +38,9 @@ function launchLocalServer() {
 
   serverWebpackCompiler.watch(watchOptions, (err, stats) => {
     if (err || stats.hasErrors()) {
-      const errorMsg = stats.toString('errors-only');
-      webpackLog.error(errorMsg);
+      const errorJson = stats.toJson('errors-only');
+      webpackLog.error('error: %j', errorJson);
+      fs.readFileSync(`${paths.distServer}/build.json`, JSON.stringify(error, null, 2));
     } else {
       const info = stats.toJson({
         all: false,
@@ -48,6 +49,7 @@ function launchLocalServer() {
         entrypoints: true,
       }); 
       webpackLog.info('webpack watch() success: at: %s, \n%o', new Date(), info);
+      fs.writeFileSync(`${paths.distServer}/build.json`, JSON.stringify(info, null, 2));
       
       delete require.cache[state.rootContainerPath];
       webpackLog.info('require cache: ', serverUtils.getProperRequireCache());

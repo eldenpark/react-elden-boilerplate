@@ -92,7 +92,7 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
         entrypoints: true,
       });
       buildLog(Task.WEBPACK_CLIENT_PROD, 'compilation success:\n%o\n', info);
-      fs.writeFileSync(`${paths.distBundle}/build.json`, JSON.stringify(info));
+      fs.writeFileSync(`${paths.distBundle}/build.json`, JSON.stringify(info, null, 2));
       done();
     }
   });
