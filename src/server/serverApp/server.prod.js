@@ -14,8 +14,8 @@ import { webpackLog } from '@server/modules/Log';
 
 export default createExpress({
   enhance: (app, state) => {
-    const _build = fs.readFileSync(`${paths.distBundle}/build.json`);
-    const build = JSON.parse(_build.toString('utf8'));
+    const buildJson = fs.readFileSync(`${paths.distBundle}/build.json`, 'utf-8');
+    const build = JSON.parse(buildJson);
     webpackLog.info('enhance(), build at distBudle %j', build);
 
     state.update(calculateNextStateWhileSearchingForBundles(build.entrypoints));
