@@ -67,8 +67,7 @@
   "main": "",
   "name": "react-boilerplate",
   "scripts": {
-    "build:client:prod": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:client:prod",
-    "build:prod": "NODE_ENV=production npm-run-all --parallel build:client:prod build:server",
+    "build:prod": "NODE_ENV=production ./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:prod",
     "build:server": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:server",
     "dev:local": "NODE_ENV=development yarn run build:server && NODE_ENV=development node ./dist/babel/server/server.js",
     "lint": "./node_modules/.bin/eslint ./src",
