@@ -79,7 +79,13 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
   const compiler = webpack(webpackConfig);
 
   compiler.run((err, stats) => {
-    buildLog(Task.WEBPACK_CLIENT_PROD, 'webpack configuration:\n%o\n', webpackConfig);
+    buildLog(
+      Task.WEBPACK_CLIENT_PROD,
+      'NODE_ENV: %s, webpack configuration: %o',
+      process.env.NODE_ENV,
+      webpackConfig,
+    );
+
     if (err || stats.hasErrors()) {
       const errorMsg = stats.toString('errors-only');
       buildLog(Task.WEBPACK_CLIENT_PROD, 'error', errorMsg);
@@ -100,3 +106,4 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
 
 gulp.task('build:client:prod', gulp.series('clean:bundle', 'webpack:client:prod'));
 gulp.task('build:server', gulp.series('clean:babel', 'babel'));
+gulp.task('build:prod', gulp.parallel('build:client:prod', 'build:server'));
