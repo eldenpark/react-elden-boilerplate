@@ -1,14 +1,14 @@
 import express from "express";
-import fs from 'fs';
-import path from "path";
+import * as fs from 'fs';
+import * as path from "path";
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
 import { calculateNextStateWhileSearchingForBundles } from '@server/serverApp/serverUtils';
 import createExpress from '@server/serverApp/createExpress';
-import LaunchStatus from '@server/constants/LaunchStatus';
-import paths from '@server/paths';
+import * as LaunchStatus from '@server/constants/LaunchStatus';
+import * as paths from '@server/paths';
 import { webpackLog } from '@server/modules/Log';
 
 const webpackConfigClientLocalWeb = require(paths.webpackConfigClientLocalWeb)

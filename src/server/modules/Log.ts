@@ -1,6 +1,6 @@
-import NodeLogger from '@server/externalModules/NodeLogger';
+import * as NodeLogger from '@server/externalModules/NodeLogger';
 
-import paths from '@server/paths';
+import * as paths from '@server/paths';
 
 const nodeLogger = NodeLogger.createLogger({
   logPath: paths.logs,

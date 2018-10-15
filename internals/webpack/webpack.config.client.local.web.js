@@ -9,7 +9,7 @@ const config = {
   entry: {
     app: [ 
       'webpack-hot-middleware/client', 
-      path.resolve(paths.srcClient, 'client.jsx'),
+      path.resolve(paths.srcClient, 'client.tsx'),
     ],
   },
   mode: 'development',

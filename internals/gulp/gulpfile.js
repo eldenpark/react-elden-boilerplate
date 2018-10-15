@@ -37,7 +37,7 @@ gulp.task(Task.BABEL, () => {
     paths.src,
   );
 
-  return gulp.src([`${paths.src}/**/*.{js,jsx}`])
+  return gulp.src([`${paths.src}/**/*.{js,jsx,ts,tsx}`])
     .pipe(sourcemaps.init())
     .pipe(babel(babelRc))
     .pipe(sourcemaps.write('.'))

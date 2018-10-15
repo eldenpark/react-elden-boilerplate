@@ -1,8 +1,8 @@
 import express from "express";
-import util from 'util';
+import * as util from 'util';
 
 import configureStore from '@client/state/configureStore';
-import LaunchStatus from '@server/constants/LaunchStatus';
+import * as LaunchStatus from '@server/constants/LaunchStatus';
 import Log, { httpLog, stateLog } from '@server/modules/Log';
 import makeHtml from '@server/serverApp/makeHtml';
 

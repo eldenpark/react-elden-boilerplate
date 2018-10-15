@@ -36,4 +36,7 @@ const config = {
   target: 'node',
 };
 
-module.exports = Object.assign({}, webpackConfigClientWeb, config);
+/**
+ * Currently not used
+ */
+// module.exports = Object.assign({}, webpackConfigClientWeb, config);
