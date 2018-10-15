@@ -1,16 +1,17 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { hot } from 'react-hot-loader';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import { withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
+import { ConnectedReduxProps } from '@client/state/configureStore';
 import { REDUX_THUNK__add } from '@actions/someAction';
 import Root from '@components/app/Root/Root.web';
 
-class RootContainer extends React.Component {
-  constructor() {
-    super();
+class RootContainer extends React.Component<RootContainerProps> {
+  constructor(props) {
+    super(props);
     this.handleClickAdd = this.handleClickAdd.bind(this);
     this.handleClickNavigate = this.handleClickNavigate.bind(this);
   }
@@ -46,9 +47,6 @@ class RootContainer extends React.Component {
   }
 }
 
-RootContainer.propTypes = {
-};
-
 const makeMapStateToProps = () => {
   return (state, props) => {
     return {
@@ -57,7 +55,13 @@ const makeMapStateToProps = () => {
   };
 };
 
-export default compose(
+interface RootContainerProps extends ConnectedReduxProps, RouteComponentProps {
+  count: number,
+  handleClickAdd: (e: React.SyntheticEvent, data: object) => void;
+  handleClickNavigate: (e: React.SyntheticEvent, path: string) => void;
+}
+
+export default compose<any>(
   hot(module),
   withRouter,
   connect(makeMapStateToProps),

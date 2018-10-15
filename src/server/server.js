@@ -39,8 +39,7 @@ function launchLocalServer() {
   serverWebpackCompiler.watch(watchOptions, (err, stats) => {
     if (err || stats.hasErrors()) {
       const errorJson = stats.toJson('errors-only');
-      webpackLog.error('error: %j', errorJson);
-      fs.readFileSync(`${paths.distServer}/build.json`, JSON.stringify(error, null, 2));
+      webpackLog.error('error: %j\n%o', errorJson);
     } else {
       const info = stats.toJson({
         all: false,

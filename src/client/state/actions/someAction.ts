@@ -1,6 +1,6 @@
 import ActionType from '@constants/ActionType';
 
-export const REDUX_THUNK__add = (param) => {
+export const REDUX_THUNK__add = () => {
   return async (dispatch, getState) => {
     try {
       dispatch({

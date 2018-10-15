@@ -1,4 +1,5 @@
 import { createStore, applyMiddleware } from 'redux';
+import { Dispatch } from 'react-redux';
 import thunk from 'redux-thunk';
 
 import reducers from './reducers/reducers';
@@ -14,7 +15,9 @@ const reduxLogger = (store) => (next) => (action) => {
 
 export default function configureStore({
   initialState,
-} = {}) {
+} = {
+  initialState: {},
+}) {
   Logger.info('redux store, initial state', initialState);
   const store = createStore(
     reducers,
@@ -30,4 +33,8 @@ export default function configureStore({
   }
 
   return store;
+};
+
+export interface ConnectedReduxProps {
+  dispatch: Dispatch,
 };

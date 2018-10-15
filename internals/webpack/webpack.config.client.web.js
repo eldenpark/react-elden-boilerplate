@@ -6,7 +6,7 @@ const paths = require('../../src/server/paths');
 module.exports = {
   context: __dirname,
   entry: {
-    app: path.resolve(paths.srcClient, 'client.jsx'),
+    app: path.resolve(paths.srcClient, 'client.tsx'),
     react: [ 'react', 'react-dom', 'redux', 'react-redux' ],
   },
   externals: {},
@@ -14,7 +14,7 @@ module.exports = {
     rules: [
       {
         exclude: /node_modules/,
-        test: /\.jsx?$/,
+        test: /\.[jt]sx?$/,
         use: [
           {
             loader: 'babel-loader',
@@ -46,6 +46,7 @@ module.exports = {
       },
     ],
   },
+  mode: 'production',
   optimization: {
     minimize: true,
     runtimeChunk: false,
@@ -65,7 +66,7 @@ module.exports = {
     modules: [
       'node_modules',
     ],
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   target: 'web',
 };

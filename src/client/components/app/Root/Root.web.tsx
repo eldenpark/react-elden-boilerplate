@@ -1,6 +1,6 @@
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import styled from 'styled-components';
 
@@ -29,8 +29,8 @@ const Location = styled.span`
 
 const Root = ({
   count,
-  handleClickAdd = () => {},
-  handleClickNavigate = () => {},
+  handleClickAdd,
+  handleClickNavigate,
   location,
 }) => {
   return (

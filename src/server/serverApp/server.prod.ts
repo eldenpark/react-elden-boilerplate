@@ -1,15 +1,15 @@
 import express from "express";
-import fs from 'fs';
-import path from "path";
+import * as fs from 'fs';
+import * as path from "path";
 import { Provider as ReduxProvider } from 'react-redux';
-import React from "react";
+import * as React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
 
 import { calculateNextStateWhileSearchingForBundles } from '@server/serverApp/serverUtils';
 import createExpress from '@server/serverApp/createExpress';
-import LaunchStatus from '@server/constants/LaunchStatus';
-import paths from '@server/paths';
+import * as LaunchStatus from '@server/constants/LaunchStatus';
+import * as paths from '@server/paths';
 import { webpackLog } from '@server/modules/Log';
 
 export default createExpress({
