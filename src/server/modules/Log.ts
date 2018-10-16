@@ -30,5 +30,10 @@ export const webpackLog = nodeLogger.with({
 
 export const stateLog = nodeLogger.with({
   color: 'yellowBright',
-  tag: 'state',
+  tag: 'server-state',
+});
+
+export const expressLog = nodeLogger.with({
+  color: 'blue',
+  tag: 'express',
 });

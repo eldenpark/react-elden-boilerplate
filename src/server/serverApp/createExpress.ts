@@ -1,10 +1,11 @@
 import express from "express";
 import * as util from 'util';
 
-import configureStore from '@client/state/configureStore';
+import appConfig from '@config/appConfig';
 import * as LaunchStatus from '@server/constants/LaunchStatus';
-import Log, { httpLog, stateLog } from '@server/modules/Log';
+import Log, { httpLog, expressLog, stateLog } from '@server/modules/Log';
 import makeHtml from '@server/serverApp/makeHtml';
+import * as paths from '@server/paths';
 
 export default function createServer({
   enhance = (app, state) => {},
@@ -28,11 +29,12 @@ export default function createServer({
   app.use(htmlLogger);
 
   enhance(app, state);
+
+  app.use(express.static(paths.public));
   
   app.get("*", (req, res) => {
-    httpLog.debug('"*" route, entrypointBundlers: %j', state)
-    const store = configureStore();
-  
+    expressLog.debug('"*" route, entrypointBundlers: %j', state);
+
     if (state.launchStatus !== LaunchStatus.LAUNCH_SUCCESS) {
       res.writeHead(500);
       res.end(util.format('server is not successfully launched, launch_status: %s', state.launchStatus));
@@ -40,14 +42,16 @@ export default function createServer({
       res.end("not yet loaded");
     } else {
       res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(makeHtml({
+      const html = makeHtml({
         entrypointBundles: state.entrypointBundles,
         localServer: state.localServer,
         requestUrl: req.url,
         rootContainerPath: state.rootContainerPath,
-        store,
-        // storeKey: appConfig.reduxStateKey,
-      }));
+        storeKey: appConfig.reduxStateKey,
+      });
+      html.then((result) => {
+        res.end(result);
+      });
     }
   });
   

@@ -6,10 +6,16 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
 import { ConnectedReduxProps } from '@client/state/configureStore';
-import { REDUX_THUNK__add } from '@actions/someAction';
+import { add, fetchFoo } from '@actions/someAction';
 import Root from '@components/app/Root/Root.web';
 
 class RootContainer extends React.Component<RootContainerProps> {
+  static prefetch({
+    url,
+  }) {
+    return fetchFoo(url);
+  }
+
   constructor(props) {
     super(props);
     this.handleClickAdd = this.handleClickAdd.bind(this);
@@ -27,7 +33,7 @@ class RootContainer extends React.Component<RootContainerProps> {
   handleClickAdd(e, data) {
     e.preventDefault();
     e.stopPropagation();
-    this.props.dispatch(REDUX_THUNK__add());
+    this.props.dispatch(add());
   }
 
   handleClickNavigate(e, path) {
@@ -42,6 +48,7 @@ class RootContainer extends React.Component<RootContainerProps> {
         count={this.props.count}
         handleClickAdd={this.handleClickAdd}
         handleClickNavigate={this.handleClickNavigate}
+        number={this.props.number}
         pathname={this.props.location.pathname}/>
     );
   }
@@ -50,13 +57,15 @@ class RootContainer extends React.Component<RootContainerProps> {
 const makeMapStateToProps = () => {
   return (state, props) => {
     return {
-      count: state.some.count,
+      count: state.foo.count,
+      number: state.foo.number,
     };
   };
 };
 
 interface RootContainerProps extends ConnectedReduxProps, RouteComponentProps {
   count: number,
+  number: number,
 }
 
 export default compose<any>(

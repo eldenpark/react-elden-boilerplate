@@ -13,6 +13,9 @@ const StyledRoot = styled.div`
   }
 `;
 
+const InitialState = styled.div`
+`;
+
 const Count = styled.p`
   background-color: black;
   color: white;
@@ -31,6 +34,7 @@ const Root: React.SFC<RootProps> = ({
   count,
   handleClickAdd,
   handleClickNavigate,
+  number,
   pathname,
 }) => {
   return (
@@ -40,12 +44,16 @@ const Root: React.SFC<RootProps> = ({
         <button onClick={(e) => handleClickNavigate(e, '/')}>/</button>
         <button onClick={(e) => handleClickNavigate(e, '/foo')}>foo</button>
       </NavBar>
+      <InitialState>
+        <p>Initial State</p>
+        <p>{number}</p>
+      </InitialState>
       <div>
-        count_abcd
+        count
         <Count>
           {count}
         </Count>
-        <button onClick={(e) => handleClickAdd}>
+        <button onClick={(e) => handleClickAdd(e, {})}>
           add
         </button>
       </div>
@@ -61,6 +69,7 @@ interface RootProps {
   count: number,
   handleClickAdd: (e: React.SyntheticEvent, data: object) => void,
   handleClickNavigate: (e: React.SyntheticEvent, path: string) => void,
+  number: number,
   pathname: string,
 }
 

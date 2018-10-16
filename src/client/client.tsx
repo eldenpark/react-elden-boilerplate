@@ -14,7 +14,7 @@ console.info('App (client.jsx) is running, NODE_ENV: %s', process.env.NODE_ENV);
 
 const appRoot = document.getElementById('app-root');
 
-(function setPolyfill() {
+(function setBabelPolyfill() {
   if ((typeof window !== 'undefined' && !window['_babelPolyfill']) 
     || (typeof global !== 'undefined' && !global['_babelPolyfill'])) {
     console.info(`babel-polyfill is imported, since it wasn't imported yet`);

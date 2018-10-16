@@ -9,12 +9,20 @@ const LaunchStatus = require('@server/constants/LaunchStatus');
 const { launchLog, webpackLog } = require('@server/modules/Log');
 const paths = require('@server/paths');
 const webpackConfigServerLocal = require(paths.webpackConfigServerLocal);
-const serverUtils = require('@server/serverApp/serverUtils');
+const serverUtils = require('@server/utils/serverUtils');
 
 const prodEnv = process.env.NODE_ENV === 'production' || false;
 let httpServer = undefined;
 
 launchLog.info('NODE_ENV: %s', process.env.NODE_ENV);
+
+(function setBabelPolyfill() {
+  if ((typeof window !== 'undefined' && !window['_babelPolyfill']) 
+    || (typeof global !== 'undefined' && !global['_babelPolyfill'])) {
+    console.info(`babel-polyfill is imported, since it wasn't imported yet`);
+    require('babel-polyfill');
+  }
+})();
 
 prodEnv ? launchProdServer() : launchLocalServer();
 

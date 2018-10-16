@@ -5,7 +5,7 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 
-import { calculateNextStateWhileSearchingForBundles } from '@server/serverApp/serverUtils';
+import { calculateNextStateWhileSearchingForBundles } from '@server/utils/serverUtils';
 import createExpress from '@server/serverApp/createExpress';
 import * as LaunchStatus from '@server/constants/LaunchStatus';
 import * as paths from '@server/paths';
