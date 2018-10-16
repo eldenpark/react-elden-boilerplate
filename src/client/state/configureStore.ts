@@ -1,8 +1,8 @@
 import { createStore, applyMiddleware } from 'redux';
 import { Dispatch } from 'react-redux';
-import thunk from 'redux-thunk';
+import thunk, { ThunkAction, ThunkMiddleware } from 'redux-thunk';
 
-import reducers from './reducers/reducers';
+import reducers, { State } from './reducers/reducers';
 import Logger from '@modules/Logger';
 
 const logger = new Logger('action');
@@ -22,7 +22,7 @@ export default function configureStore({
   const store = createStore(
     reducers,
     initialState,
-    applyMiddleware(thunk, reduxLogger),
+    applyMiddleware(thunk as ThunkMiddleware<State>, reduxLogger),
   );
 
   if (module.hot) {

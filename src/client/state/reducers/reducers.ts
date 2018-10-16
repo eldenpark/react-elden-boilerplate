@@ -1,7 +1,13 @@
-import { combineReducers } from 'redux';
+import { combineReducers, Reducer } from 'redux';
 
-import someReducer from './someReducer';
+import fooReducer from './fooReducer';
 
-export default combineReducers({
-  some: someReducer,
+const rootReducer: Reducer<State> = combineReducers({
+  foo: fooReducer,
 });
+
+export default rootReducer;
+
+export interface State {
+  foo: any,
+};

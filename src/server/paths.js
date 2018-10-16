@@ -22,6 +22,7 @@ module.exports = {
   distBundle: path.resolve(DIST_PATH, 'bundle'),
   distServer: path.resolve(DIST_PATH, 'server'),
   logs: path.resolve(ROOT_PATH, 'logs'),
+  public: path.resolve(SRC_PATH, 'server/public'),
   src: SRC_PATH,
   srcClient: path.resolve(SRC_PATH, 'client'),
   srcServer: path.resolve(SRC_PATH, 'server'),
