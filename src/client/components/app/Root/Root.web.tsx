@@ -27,16 +27,16 @@ const Location = styled.span`
   width: 120px;
 `;
 
-const Root = ({
+const Root: React.SFC<RootProps> = ({
   count,
   handleClickAdd,
   handleClickNavigate,
-  location,
+  pathname,
 }) => {
   return (
     <StyledRoot>
       <NavBar>
-        <Location>{location.pathname}</Location>
+        <Location>{pathname}</Location>
         <button onClick={(e) => handleClickNavigate(e, '/')}>/</button>
         <button onClick={(e) => handleClickNavigate(e, '/foo')}>foo</button>
       </NavBar>
@@ -45,7 +45,7 @@ const Root = ({
         <Count>
           {count}
         </Count>
-        <button onClick={handleClickAdd}>
+        <button onClick={(e) => handleClickAdd}>
           add
         </button>
       </div>
@@ -57,10 +57,11 @@ Root.defaultProps = {
   count: 0,
 };
 
-Root.propTypes = {
-  count: PropTypes.number,
-  handleClickAdd: PropTypes.func.isRequired,
-  handleClickNavigate: PropTypes.func.isRequired,
-};
+interface RootProps {
+  count: number,
+  handleClickAdd: (e: React.SyntheticEvent, data: object) => void,
+  handleClickNavigate: (e: React.SyntheticEvent, path: string) => void,
+  pathname: string,
+}
 
 export default Root;

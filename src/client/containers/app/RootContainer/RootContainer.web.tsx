@@ -42,7 +42,7 @@ class RootContainer extends React.Component<RootContainerProps> {
         count={this.props.count}
         handleClickAdd={this.handleClickAdd}
         handleClickNavigate={this.handleClickNavigate}
-        location={this.props.location}/>
+        pathname={this.props.location.pathname}/>
     );
   }
 }
@@ -57,8 +57,6 @@ const makeMapStateToProps = () => {
 
 interface RootContainerProps extends ConnectedReduxProps, RouteComponentProps {
   count: number,
-  handleClickAdd: (e: React.SyntheticEvent, data: object) => void;
-  handleClickNavigate: (e: React.SyntheticEvent, path: string) => void;
 }
 
 export default compose<any>(
