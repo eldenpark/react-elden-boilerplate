@@ -36,30 +36,32 @@ function launchLocalServer() {
   });
   runHttpServer(server.app);
 
-  serverWebpackCompiler.watch(watchOptions, (err, stats) => {
-    if (err || stats.hasErrors()) {
-      const errorJson = stats.toJson('errors-only');
-      webpackLog.error('error: %j\n%o', errorJson);
-    } else {
-      const info = stats.toJson({
-        all: false,
-        assets: true,
-        builtAt: true,
-        entrypoints: true,
-      }); 
-      webpackLog.info('webpack watch() success: at: %s, \n%o', new Date(), info);
-      fs.writeFileSync(`${paths.distServer}/build.json`, JSON.stringify(info, null, 2));
-      
-      delete require.cache[state.rootContainerPath];
-      webpackLog.info('require cache: ', serverUtils.getProperRequireCache());
-      
-      const rootContainerBundlePath = path.resolve(paths.distServer, info.entrypoints.rootContainer.assets[0]);
-      state.update({
-        launchStatus: LaunchStatus.LAUNCH_SUCCESS,
-        rootContainerPath: rootContainerBundlePath,
-      });
-    }
-  });
+  (function replaceRootContainerBundleWhenFilesAreChanged() {
+    serverWebpackCompiler.watch(watchOptions, (err, stats) => {
+      if (err || stats.hasErrors()) {
+        const errorJson = stats.toJson('errors-only');
+        webpackLog.error('error: %j\n%o', errorJson);
+      } else {
+        const info = stats.toJson({
+          all: false,
+          assets: true,
+          builtAt: true,
+          entrypoints: true,
+        }); 
+        webpackLog.info('webpack watch() success: at: %s, \n%o', new Date(), info);
+        fs.writeFileSync(`${paths.distServer}/build.json`, JSON.stringify(info, null, 2));
+        
+        delete require.cache[state.rootContainerPath];
+        webpackLog.info('require cache: ', serverUtils.getProperRequireCache());
+        
+        const rootContainerBundlePath = path.resolve(paths.distServer, info.entrypoints.rootContainer.assets[0]);
+        state.update({
+          launchStatus: LaunchStatus.LAUNCH_SUCCESS,
+          rootContainerPath: rootContainerBundlePath,
+        });
+      }
+    });
+  })();
 }
 
 function launchProdServer() {

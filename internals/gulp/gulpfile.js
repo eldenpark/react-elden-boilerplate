@@ -10,11 +10,13 @@ const fs = require('fs');
 const gulp = require('gulp');
 const path = require('path');
 const sourcemaps = require('gulp-sourcemaps');
+const typescript = require('gulp-typescript');
 const util = require('util');
 const webpack = require('webpack');
 
 const babelRc = require('../babel/.babelrc');
 const paths = require('../../src/server/paths');
+const tsProject = typescript.createProject('tsconfig.json');
 
 const buildLog = (tag, ...args) => {
   console.info(chalk.cyan(`[build - ${tag}]`), util.format(...args));
@@ -25,6 +27,7 @@ const Task = {
   CLEAN_BABEL: 'clean:babel',
   CLEAN_BUNDLE: 'clean:bundle',
   EMPTYLOG: 'emptylog',
+  TSC: 'tsc',
   WEBPACK_CLIENT_PROD: 'webpack:client:prod',
 };
 
@@ -68,6 +71,13 @@ gulp.task(Task.EMPTYLOG, () => {
   ]);
 });
 
+gulp.task(Task.TSC, () => {
+  buildLog(Task.TSC, 'Typescript configuration:\n%o', tsProject.config);
+
+  return gulp.src([`${paths.src}/**/*.{js,jsx,ts,tsx}`])
+    .pipe(tsProject());
+});
+
 gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
   let webpackConfig = undefined;
   try {
@@ -104,6 +114,8 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
   });
 });
 
-gulp.task('build:client:prod', gulp.series('clean:bundle', 'webpack:client:prod'));
-gulp.task('build:server', gulp.series('clean:babel', 'babel'));
+gulp.task('build:client:prod', gulp.series(Task.CLEAN_BUNDLE, Task.WEBPACK_CLIENT_PROD));
+
+gulp.task('build:server', gulp.series(Task.CLEAN_BABEL, Task.TSC, Task.BABEL));
+
 gulp.task('build:prod', gulp.parallel('build:client:prod', 'build:server'));
