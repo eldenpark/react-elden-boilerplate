@@ -18,6 +18,7 @@ const config = {
   },
   output: {
     filename: '[name].[hash].js',
+    publicPath: '/bundle/',
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

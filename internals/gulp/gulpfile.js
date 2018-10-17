@@ -59,7 +59,7 @@ gulp.task(Task.CLEAN_BUNDLE, () => {
   buildLog(Task.CLEAN_BUNDLE, 'Remove all the contents in %s', paths.distBundle);
 
   return del([
-    `${paths.distBundle}/**/*`,
+    `${paths.distPublicBundle}/**/*`,
   ]);
 });
 
@@ -108,7 +108,7 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
         entrypoints: true,
       });
       buildLog(Task.WEBPACK_CLIENT_PROD, 'compilation success:\n%o\n', info);
-      fs.writeFileSync(`${paths.distBundle}/build.json`, JSON.stringify(info, null, 2));
+      fs.writeFileSync(`${paths.distPublicBundle}/build.json`, JSON.stringify(info, null, 2));
       done();
     }
   });
