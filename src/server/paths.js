@@ -19,15 +19,15 @@ Did you call process.chdir() properly?`);
 module.exports = {
   dist: DIST_PATH,
   distBabel: path.resolve(DIST_PATH, 'babel'),
-  distBundle: path.resolve(DIST_PATH, 'bundle'),
+  distPublic: path.resolve(DIST_PATH, 'public'),
+  distPublicBundle: path.resolve(DIST_PATH, 'public/bundle'),
   distServer: path.resolve(DIST_PATH, 'server'),
   logs: path.resolve(ROOT_PATH, 'logs'),
-  public: path.resolve(SRC_PATH, 'server/public'),
   src: SRC_PATH,
   srcClient: path.resolve(SRC_PATH, 'client'),
   srcServer: path.resolve(SRC_PATH, 'server'),
+  srcUniversal: path.resolve(SRC_PATH, 'universal'),
   webpackConfigClientLocalWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.local.web.js'),
   webpackConfigClientProdWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.prod.web'),
   webpackConfigServerLocal: path.resolve(WEBPACK_PATH, 'webpack.config.server.local'),
-  webpackConfigServerProd: path.resolve(WEBPACK_PATH, 'webpack.config.server.prod'),
 };

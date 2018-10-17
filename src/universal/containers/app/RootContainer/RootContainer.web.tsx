@@ -5,7 +5,7 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
-import { ConnectedReduxProps } from '@client/state/configureStore';
+import { ConnectedReduxProps } from '@universal/state/configureStore';
 import { add, fetchFoo } from '@actions/someAction';
 import Root from '@components/app/Root/Root.web';
 

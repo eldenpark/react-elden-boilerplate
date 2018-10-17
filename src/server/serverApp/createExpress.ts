@@ -30,7 +30,7 @@ export default function createServer({
 
   enhance(app, state);
 
-  app.use(express.static(paths.public));
+  app.use(express.static(paths.distPublic));
   
   app.get("*", (req, res) => {
     expressLog.debug('"*" route, entrypointBundlers: %j', state);

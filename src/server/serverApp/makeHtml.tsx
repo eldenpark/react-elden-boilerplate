@@ -5,9 +5,9 @@ import { StaticRouter } from 'react-router-dom';
 import { Store } from 'redux';
 
 import ActionType from "@constants/ActionType";
-import configureStore from '@client/state/configureStore';
+import configureStore from '@universal/state/configureStore';
 import Log, { expressLog } from '@server/modules/Log';
-import routes from '@client/routes';
+import routes from '@universal/routes';
 import ServerApp from './ServerApp.web';
 
 const makeHtml: MakeHtml = async function ({
@@ -34,21 +34,19 @@ const makeHtml: MakeHtml = async function ({
   const appRootInString = renderToString(appRoot);
 
   return `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <title>react-elden-boilerplate</title>
-    </head>
-    <body>
-      <div id="app-root">${appRootInString}</div>
-      <script>
-        window['${storeKey}'] = ${JSON.stringify(store.getState())};
-      </script>
-      ${createScripts(entrypointBundles)}
-    </body>
-    </html>
-  `;
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>react-elden-boilerplate</title>
+</head>
+<body>
+  <div id="app-root">${appRootInString}</div>
+  <script>window['${storeKey}']=${JSON.stringify(store.getState())};</script>
+  ${createScripts(entrypointBundles)}
+</body>
+</html>
+`;
 };
 
 export default makeHtml;
@@ -63,7 +61,7 @@ async function createStoreAndPrefetchData({
 }
 
 function createScripts(src = []) {
-  return src.map((s) => `<script src="/${s}"></script>`)
+  return src.map((s) => `<script src="/bundle/${s}"></script>`)
     .join('');
 }
 

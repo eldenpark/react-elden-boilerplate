@@ -55,7 +55,7 @@ module.exports = {
     }
   },
   output: {
-    path: paths.distBundle,
+    path: paths.distPublicBundle,
     filename: '[name].[chunkhash].js',
     chunkFilename: 'chunk.[chunkhash].js',
     publicPath: '/',

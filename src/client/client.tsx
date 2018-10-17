@@ -5,7 +5,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import appConfig from '@config/appConfig';
-import configureStore from '@client/state/configureStore';
+import configureStore from '@universal/state/configureStore';
 import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 
 // import Logger from '@modules/Logger';
