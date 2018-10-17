@@ -10,13 +10,14 @@ const fs = require('fs');
 const gulp = require('gulp');
 const path = require('path');
 const sourcemaps = require('gulp-sourcemaps');
+const tslint = require("gulp-tslint");
 const typescript = require('gulp-typescript');
 const util = require('util');
 const webpack = require('webpack');
 
 const babelRc = require('../babel/.babelrc');
 const paths = require('../../src/server/paths');
-const tsProject = typescript.createProject('tsconfig.json');
+const tslintConfig = require('../tslint/tslint');
 
 const buildLog = (tag, ...args) => {
   console.info(chalk.cyan(`[build - ${tag}]`), util.format(...args));
@@ -29,6 +30,7 @@ const Task = {
   COPY_PUBLIC: 'copy:public',
   EMPTYLOG: 'emptylog',
   TSC: 'tsc',
+  TSLINT: 'tslint',
   WEBPACK_CLIENT_PROD: 'webpack:client:prod',
 };
 
@@ -84,10 +86,23 @@ gulp.task(Task.EMPTYLOG, () => {
 });
 
 gulp.task(Task.TSC, () => {
+  const tsProject = typescript.createProject('tsconfig.json');
   buildLog(Task.TSC, 'Typescript configuration:\n%o', tsProject.config);
 
   return gulp.src([`${paths.src}/**/*.{js,jsx,ts,tsx}`])
     .pipe(tsProject());
+});
+
+gulp.task(Task.TSLINT, (done) => {
+  buildLog(Task.TSLINT, 'TSLint with configuration:\n%o', tslintConfig);
+
+  return gulp.src(`${paths.src}/**/*.{ts,tsx}`)
+    .pipe(tslint({
+      configuration: 'internals/tslint/tslint.js',
+      formatter: 'stylish',
+    }))
+    .pipe(tslint.report())
+    .on('error', function ignoreError(err) {});
 });
 
 gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
