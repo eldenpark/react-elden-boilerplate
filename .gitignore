@@ -109,4 +109,3 @@ __temp/
 .vscode/
 build/
 dist/
-tsconfig.json

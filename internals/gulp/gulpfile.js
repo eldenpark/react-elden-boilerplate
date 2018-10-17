@@ -24,8 +24,9 @@ const buildLog = (tag, ...args) => {
 
 const Task = {
   BABEL: 'babel',
-  CLEAN_BABEL: 'clean:babel',
   CLEAN_BUNDLE: 'clean:bundle',
+  CLEAN_DIST_EXCEPT_BUNDLE: 'clean:dist:except:bundle',
+  COPY_PUBLIC: 'copy:public',
   EMPTYLOG: 'emptylog',
   TSC: 'tsc',
   WEBPACK_CLIENT_PROD: 'webpack:client:prod',
@@ -47,20 +48,31 @@ gulp.task(Task.BABEL, () => {
 		.pipe(gulp.dest(paths.distBabel));
 });
 
-gulp.task(Task.CLEAN_BABEL, () => {
-  buildLog(Task.CLEAN_BABEL,'Remove all the contents in %s', paths.distBabel);
-
-  return del([
-    `${paths.distBabel}/**/*`,
-  ]);
-});
-
 gulp.task(Task.CLEAN_BUNDLE, () => {
-  buildLog(Task.CLEAN_BUNDLE, 'Remove all the contents in %s', paths.distBundle);
-
   return del([
     `${paths.distPublicBundle}/**/*`,
   ]);
+});
+
+gulp.task(Task.CLEAN_DIST_EXCEPT_BUNDLE, () => {
+  buildLog(
+    Task.CLEAN_DIST_EXCEPT_BUNDLE, 
+    'Remove all the contents in %s, except in %s', 
+    paths.dist,
+    paths.distPublicBundle);
+
+  return del([
+    `${paths.dist}/**/*`,
+    `!${paths.dist}/public`,
+    `!${paths.dist}/public/bundle/**`,
+  ]);
+});
+
+gulp.task(Task.COPY_PUBLIC, () => {
+  buildLog(Task.COPY_PUBLIC, 'Copy contents from %s to %s', paths.srcServerPublic, paths.distPublic);
+
+  return gulp.src([`${paths.srcServerPublic}/**/*`])
+    .pipe(gulp.dest(paths.distPublic));
 });
 
 gulp.task(Task.EMPTYLOG, () => {
@@ -116,6 +128,6 @@ gulp.task(Task.WEBPACK_CLIENT_PROD, (done) => {
 
 gulp.task('build:client:prod', gulp.series(Task.CLEAN_BUNDLE, Task.WEBPACK_CLIENT_PROD));
 
-gulp.task('build:server', gulp.series(Task.CLEAN_BABEL, Task.TSC, Task.BABEL));
+gulp.task('build:server', gulp.series(Task.CLEAN_DIST_EXCEPT_BUNDLE, Task.TSC, Task.COPY_PUBLIC, Task.BABEL));
 
-gulp.task('build:prod', gulp.parallel('build:client:prod', 'build:server'));
+gulp.task('build:prod', gulp.parallel('build:server', 'build:client:prod'));

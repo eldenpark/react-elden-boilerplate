@@ -49,6 +49,10 @@ const Root: React.SFC<RootProps> = ({
         <p>{number}</p>
       </InitialState>
       <div>
+        <p>static file</p>
+        <p><img src="/favicon-256.png" alt=""/></p>
+      </div>
+      <div>
         count
         <Count>
           {count}

@@ -26,6 +26,7 @@ module.exports = {
   src: SRC_PATH,
   srcClient: path.resolve(SRC_PATH, 'client'),
   srcServer: path.resolve(SRC_PATH, 'server'),
+  srcServerPublic: path.resolve(SRC_PATH, 'server/public'),
   srcUniversal: path.resolve(SRC_PATH, 'universal'),
   webpackConfigClientLocalWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.local.web.js'),
   webpackConfigClientProdWeb: path.resolve(WEBPACK_PATH, 'webpack.config.client.prod.web'),
