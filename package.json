@@ -75,7 +75,7 @@
   },
   "license": "MIT",
   "main": "",
-  "name": "react-boilerplate",
+  "name": "react-elden-boilerplate",
   "scripts": {
     "build:prod": "NODE_ENV=production ./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:prod",
     "build:server": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:server",
@@ -85,5 +85,5 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js tsc"
   },
-  "version": "0.0.1"
+  "version": "0.0.2"
 }

@@ -8,8 +8,6 @@ import appConfig from '@config/appConfig';
 import configureStore from '@universal/state/configureStore';
 import RootContainer from '@containers/app/RootContainer/RootContainer.web';
 
-// import Logger from '@modules/Logger';
-
 console.info('App (client.jsx) is running, NODE_ENV: %s', process.env.NODE_ENV);
 
 const appRoot = document.getElementById('app-root');
