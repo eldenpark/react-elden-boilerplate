@@ -12,7 +12,6 @@ import ServerApp from './ServerApp.web';
 
 const makeHtml: MakeHtml = async function ({
   entrypointBundles,
-  localServer = false,
   requestUrl = '',
   rootContainerPath = '',
   storeKey = 'REDUX_STATE_KEY__NOT_DEFINED',
@@ -25,13 +24,13 @@ const makeHtml: MakeHtml = async function ({
 
   const appRoot = (
     <ServerApp
-      localServer={localServer}
       requestUrl={requestUrl}
       rootContainerPath={rootContainerPath}
       store={store}
     />
   );
   const appRootInString = renderToString(appRoot);
+  expressLog.debug('appRootInString: %s', appRootInString);
 
   return `
 <!DOCTYPE html>

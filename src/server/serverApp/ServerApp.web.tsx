@@ -5,20 +5,20 @@ import { StaticRouter } from 'react-router-dom';
 import { Store } from 'redux';
 
 import Log from '@server/modules/Log';
+import RootContainerFallback from '@containers/app/RootContainer/RootContainer.web';
 
 const ServerApp: React.SFC<ServerAppProps> = ({
-  localServer,
   requestUrl,
-  rootContainerPath = '',
+  rootContainerPath,
   store,
 }) => {
   Log.info('<App/> with rootContainerPath: %s', rootContainerPath);
 
   let RootContainerComponent;
   try {
-    RootContainerComponent = localServer
+    RootContainerComponent = rootContainerPath
       ? require(rootContainerPath).default
-      : require('@containers/app/RootContainer/RootContainer.web').default;
+      : RootContainerFallback;
   } catch (err) {
     Log.error('<App/> cannot find rootContainer at: %s', rootContainerPath, err);
     return <div>RootContainer not found</div>;
@@ -37,7 +37,6 @@ const ServerApp: React.SFC<ServerAppProps> = ({
 };
 
 interface ServerAppProps {
-  localServer: boolean,
   requestUrl: string,
   rootContainerPath: string,
   store,

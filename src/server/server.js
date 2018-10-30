@@ -73,8 +73,11 @@ function launchLocalServer() {
 }
 
 function launchProdServer() {
-  const server = require('@server/serverApp/server.prod').default;
-  runHttpServer(server.app);
+  const { app, state } = require('@server/serverApp/server.prod').default;
+  state.update({
+    rootContainerBundlePath: '@containers/app/RootContainer/RootContainer.web',
+  });
+  runHttpServer(app);
 }
 
 function runHttpServer(app) {
