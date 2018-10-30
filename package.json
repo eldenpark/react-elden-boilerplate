@@ -17,7 +17,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "styled-components": "^3.1.6",
+    "styled-components": "^4.0.2",
     "winston": "3",
     "winston-daily-rotate-file": "^3.3.3"
   },
@@ -43,7 +43,7 @@
     "@types/webpack-env": "^1.13.6",
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
-    "babel-plugin-styled-components": "^1.4.0",
+    "babel-plugin-styled-components": "^1.8.0",
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "eslint": "^5.6.1",
