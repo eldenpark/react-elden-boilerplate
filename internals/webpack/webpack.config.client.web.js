@@ -5,10 +5,6 @@ const paths = require('../../src/server/paths');
 
 module.exports = {
   context: __dirname,
-  entry: {
-    app: path.resolve(paths.srcClient, 'client.tsx'),
-    react: [ 'react', 'react-dom', 'redux', 'react-redux' ],
-  },
   externals: {},
   module: {
     rules: [
@@ -45,20 +41,6 @@ module.exports = {
         ],
       },
     ],
-  },
-  mode: 'production',
-  optimization: {
-    minimize: true,
-    runtimeChunk: false,
-    splitChunks: {
-      chunks: 'all',
-    }
-  },
-  output: {
-    path: paths.distPublicBundle,
-    filename: '[name].[chunkhash].js',
-    chunkFilename: 'chunk.[chunkhash].js',
-    publicPath: '/',
   },
   plugins: [
   ],
