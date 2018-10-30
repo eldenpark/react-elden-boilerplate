@@ -2,7 +2,11 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
+import { Route, Switch } from 'react-router';
 import styled from 'styled-components';
+
+import Main from '@components/app/Main/Main.web';
+import rootRoutes, { RouteEntry } from './rootRotues';
 
 const StyledRoot = styled.div`
   color: blue;
@@ -11,14 +15,6 @@ const StyledRoot = styled.div`
     border-bottom: 1px solid green;
     padding: 15px;
   }
-`;
-
-const InitialState = styled.div`
-`;
-
-const Count = styled.p`
-  background-color: black;
-  color: white;
 `;
 
 const NavBar = styled.div`
@@ -31,10 +27,7 @@ const Location = styled.span`
 `;
 
 const Root: React.SFC<RootProps> = ({
-  count,
-  handleClickAdd,
   handleClickNavigate,
-  number,
   pathname,
 }) => {
   return (
@@ -43,38 +36,33 @@ const Root: React.SFC<RootProps> = ({
         <Location>{pathname}</Location>
         <button onClick={(e) => handleClickNavigate(e, '/')}>/</button>
         <button onClick={(e) => handleClickNavigate(e, '/foo')}>foo</button>
+        <button onClick={(e) => handleClickNavigate(e, '/graphql')}>graphql</button>
       </NavBar>
-      <InitialState>
-        <p>Initial State</p>
-        <p>{number}</p>
-      </InitialState>
-      <div>
-        <p>static file</p>
-        <p><img src="/favicon-256.png" alt=""/></p>
-      </div>
-      <div>
-        count
-        <Count>
-          {count}
-        </Count>
-        <button onClick={(e) => handleClickAdd(e, {})}>
-          add
-        </button>
-      </div>
+      {createRoutes(rootRoutes)}
     </StyledRoot>
   );
 };
 
-Root.defaultProps = {
-  count: 0,
-};
+export default Root;
 
 interface RootProps {
-  count: number,
-  handleClickAdd: (e: React.SyntheticEvent, data: object) => void,
   handleClickNavigate: (e: React.SyntheticEvent, path: string) => void,
-  number: number,
   pathname: string,
 }
 
-export default Root;
+function createRoutes(routes: RouteEntry[]) {
+  return (
+    <Switch>
+      {
+        routes.map((r, idx) => {
+          return (
+            <Route
+              key={r.path || idx}
+              {...r}
+            />
+          );
+        })
+      }
+    </Switch>
+  );
+}
