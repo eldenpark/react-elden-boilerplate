@@ -18,7 +18,6 @@ class RootContainer extends React.Component<RootContainerProps> {
 
   constructor(props) {
     super(props);
-    this.handleClickAdd = this.handleClickAdd.bind(this);
     this.handleClickNavigate = this.handleClickNavigate.bind(this);
   }
 
@@ -30,12 +29,6 @@ class RootContainer extends React.Component<RootContainerProps> {
     console.log('Root did mount');
   }
 
-  handleClickAdd(e, data) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.props.dispatch(add());
-  }
-
   handleClickNavigate(e, path) {
     e.preventDefault();
     e.stopPropagation();
@@ -45,31 +38,18 @@ class RootContainer extends React.Component<RootContainerProps> {
   render() {
     return (
       <Root
-        count={this.props.count}
-        handleClickAdd={this.handleClickAdd}
         handleClickNavigate={this.handleClickNavigate}
-        number={this.props.number}
-        pathname={this.props.location.pathname}/>
+        pathname={this.props.location.pathname}
+      />
     );
   }
 }
 
-const makeMapStateToProps = () => {
-  return (state, props) => {
-    return {
-      count: state.foo.count,
-      number: state.foo.number,
-    };
-  };
-};
-
 interface RootContainerProps extends ConnectedReduxProps, RouteComponentProps {
-  count: number,
-  number: number,
 }
 
 export default compose<any>(
   hot(module),
   withRouter,
-  connect(makeMapStateToProps),
+  connect(),
 )(RootContainer);
