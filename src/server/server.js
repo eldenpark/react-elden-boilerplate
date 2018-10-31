@@ -37,12 +37,8 @@ function launchLocalServer() {
     poll: undefined,
   };
 
-  const server = require('@server/serverApp/server.local').default;
-  const state = server.state;
-  state.update({
-    localServer: true,
-  });
-  runHttpServer(server.app);
+  const { app, state } = require('@server/serverApp/server.local').default;
+  runHttpServer(app);
 
   (function replaceRootContainerBundleWhenFilesAreChanged() {
     serverWebpackCompiler.watch(watchOptions, (err, stats) => {
@@ -74,9 +70,6 @@ function launchLocalServer() {
 
 function launchProdServer() {
   const { app, state } = require('@server/serverApp/server.prod').default;
-  state.update({
-    rootContainerBundlePath: '@containers/app/RootContainer/RootContainer.web',
-  });
   runHttpServer(app);
 }
 

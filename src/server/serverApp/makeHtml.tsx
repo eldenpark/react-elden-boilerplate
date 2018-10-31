@@ -1,5 +1,9 @@
-import * as React from "react";
+import ApolloClient from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import fetch from 'node-fetch';
+import { InMemoryCache } from "apollo-cache-inmemory";
 import { Provider as ReduxProvider } from 'react-redux';
+import * as React from "react";
 import { renderToString } from "react-dom/server";
 import { StaticRouter } from 'react-router-dom';
 import { Store } from 'redux';
@@ -8,7 +12,7 @@ import ActionType from "@constants/ActionType";
 import configureStore from '@universal/state/configureStore';
 import Log, { expressLog } from '@server/modules/Log';
 import routes from '@universal/routes';
-import ServerApp from './ServerApp.web';
+import ServerApp from './ServerApp';
 
 const makeHtml: MakeHtml = async function ({
   entrypointBundles,
@@ -16,21 +20,33 @@ const makeHtml: MakeHtml = async function ({
   rootContainerPath = '',
   storeKey = 'REDUX_STATE_KEY__NOT_DEFINED',
 }) {
-  const store = await createStoreAndPrefetchData({
+  const apolloClient = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: createHttpLink({
+      fetch,
+      uri: 'http://localhost:3010',
+    }),
+    ssrMode: true,
+  });
+  const apolloState = apolloClient.extract();
+
+  const reduxStore = await createStoreAndPrefetchData({
     requestUrl,
   });
-  const state = store.getState();
-  expressLog.debug('makeHtml() with store: %j', state);
 
   const appRoot = (
     <ServerApp
+      apolloClient={apolloClient}
       requestUrl={requestUrl}
       rootContainerPath={rootContainerPath}
-      store={store}
+      reduxStore={reduxStore}
     />
   );
   const appRootInString = renderToString(appRoot);
+
+  expressLog.debug('makeHtml() with store: %j', reduxStore.getState());
   expressLog.debug('appRootInString: %s', appRootInString);
+  expressLog.debug('apollo state: %s', JSON.stringify(apolloState));
 
   return `
 <!DOCTYPE html>
@@ -41,7 +57,8 @@ const makeHtml: MakeHtml = async function ({
 </head>
 <body>
   <div id="app-root">${appRootInString}</div>
-  <script>window['${storeKey}']=${JSON.stringify(store.getState())};</script>
+  <script>window['${storeKey}']=${JSON.stringify(reduxStore.getState())};</script>
+  <script>window.__APOLLO_STATE__ = ${JSON.stringify(apolloState)};</script>
   ${createScripts(entrypointBundles)}
 </body>
 </html>
@@ -59,15 +76,14 @@ async function createStoreAndPrefetchData({
   return store;
 }
 
-function createScripts(src = []) {
+function createScripts(src: string[] = []) {
   return src.map((s) => `<script src="/bundle/${s}"></script>`)
     .join('');
 }
 
 interface MakeHtml {
-  (props: {
+    (props: {
     entrypointBundles: string[],
-    localServer: boolean,
     requestUrl: string,
     rootContainerPath: string,
     storeKey: string,

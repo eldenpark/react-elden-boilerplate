@@ -11,10 +11,9 @@ export default function createServer({
   enhance = (app, state) => {},
 }) {
   const app = express();
-  let state = {
+  let state: State = {
     entrypointBundles: [],
     launchStatus: LaunchStatus.NOT_LAUNCHED,
-    localServer: false,
     rootContainerPath: undefined,
     update(obj = {}) {
       stateLog.info('state will update with: %o', obj);
@@ -32,26 +31,27 @@ export default function createServer({
 
   app.use(express.static(paths.distPublic));
   
-  app.get("*", (req, res) => {
+  app.get("*", async (req, res) => {
     expressLog.debug('"*" route, entrypointBundlers: %j', state);
 
     if (state.launchStatus !== LaunchStatus.LAUNCH_SUCCESS) {
       res.writeHead(500);
-      res.end(util.format('server is not successfully launched, launch_status: %s', state.launchStatus));
-    } else if (state.localServer && state.rootContainerPath === undefined) {
-      res.end("not yet loaded");
+      res.end(util.format('Server is not successfully launched, launch_status: %s', state.launchStatus));
     } else {
       res.writeHead(200, { "Content-Type": "text/html" });
-      const html = makeHtml({
-        entrypointBundles: state.entrypointBundles,
-        localServer: state.localServer,
-        requestUrl: req.url,
-        rootContainerPath: state.rootContainerPath,
-        storeKey: appConfig.reduxStateKey,
-      });
-      html.then((result) => {
-        res.end(result);
-      });
+
+      try {
+        const html = await makeHtml({
+          entrypointBundles: state.entrypointBundles,
+          requestUrl: req.url,
+          rootContainerPath: state.rootContainerPath,
+          storeKey: appConfig.reduxStateKey,
+        });
+        res.end(html);
+      } catch (err) {
+        expressLog.error(err);
+        res.end('Failed to create html');
+      }
     }
   });
   
@@ -60,6 +60,13 @@ export default function createServer({
     state,
   };
 };
+
+interface State {
+  entrypointBundles: string[],
+  launchStatus: string,
+  rootContainerPath: string,
+  update: (arg: object) => void,
+}
 
 function htmlLogger(req, res, next) {
   httpLog.debug('%s url: %s, user agent: %s', new Date(), req.url, req.get('User-Agent'));
