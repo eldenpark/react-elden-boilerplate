@@ -1,4 +1,4 @@
-import * as NodeLogger from '@server/externalModules/NodeLogger';
+import * as NodeLogger from 'node-logger';
 
 import * as paths from '@server/paths';
 

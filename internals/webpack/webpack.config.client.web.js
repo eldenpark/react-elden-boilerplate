@@ -40,6 +40,11 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto',
+      },
     ],
   },
   plugins: [
@@ -48,7 +53,15 @@ module.exports = {
     modules: [
       'node_modules',
     ],
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    extensions: [
+      '.js', 
+      '.jsx', 
+      '.ts', 
+      '.tsx',
+
+      // https://github.com/apollographql/apollo-link-state/issues/302#issuecomment-431219631
+      '*', '.mjs', '.gql', '.graphql', 
+    ],
   },
   target: 'web',
 };

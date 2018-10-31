@@ -1,3 +1,5 @@
+import ApolloClient from 'apollo-client';
+import { ApolloProvider } from 'react-apollo';
 import * as React from "react";
 import { Provider as ReduxProvider } from 'react-redux';
 import { renderToString } from "react-dom/server";
@@ -8,9 +10,10 @@ import Log from '@server/modules/Log';
 import RootContainerFallback from '@containers/app/RootContainer/RootContainer.web';
 
 const ServerApp: React.SFC<ServerAppProps> = ({
+  apolloClient,
   requestUrl,
   rootContainerPath,
-  store,
+  reduxStore,
 }) => {
   Log.info('<App/> with rootContainerPath: %s', rootContainerPath);
 
@@ -25,21 +28,24 @@ const ServerApp: React.SFC<ServerAppProps> = ({
   }
 
   return (
-    <ReduxProvider store={store}>
-      <StaticRouter
-        context={{}}
-        location={requestUrl}
-      >
-        <RootContainerComponent/>
-      </StaticRouter>
+    <ReduxProvider store={reduxStore}>
+      <ApolloProvider client={apolloClient}>
+        <StaticRouter
+          context={{}}
+          location={requestUrl}
+        >
+          <RootContainerComponent/>
+        </StaticRouter>
+      </ApolloProvider>
     </ReduxProvider>
   );
 };
 
 interface ServerAppProps {
+  apolloClient: ApolloClient<any>,
   requestUrl: string,
   rootContainerPath: string,
-  store,
+  reduxStore,
 }
 
 export default ServerApp;
