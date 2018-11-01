@@ -14,6 +14,8 @@ import Log, { expressLog } from '@server/modules/Log';
 import routes from '@universal/routes';
 import ServerApp from './ServerApp';
 
+const FAKE_GRAPHQL_SERVER_URL_LAUNCHED_AS_TOOLS = 'http://localhost:5010/graphql';
+
 const makeHtml: MakeHtml = async function ({
   entrypointBundles,
   requestUrl = '',
@@ -24,7 +26,7 @@ const makeHtml: MakeHtml = async function ({
     cache: new InMemoryCache(),
     link: createHttpLink({
       fetch,
-      uri: 'http://localhost:3010',
+      uri: FAKE_GRAPHQL_SERVER_URL_LAUNCHED_AS_TOOLS,
     }),
     ssrMode: true,
   });
