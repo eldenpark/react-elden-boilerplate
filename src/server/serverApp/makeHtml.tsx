@@ -1,6 +1,7 @@
 import ApolloClient from 'apollo-client';
 import { createHttpLink } from 'apollo-link-http';
 import fetch from 'node-fetch';
+import { getDataFromTree } from 'react-apollo';
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { Provider as ReduxProvider } from 'react-redux';
 import * as React from "react";
@@ -30,7 +31,6 @@ const makeHtml: MakeHtml = async function ({
     }),
     ssrMode: true,
   });
-  const apolloState = apolloClient.extract();
 
   const reduxStore = await createStoreAndPrefetchData({
     requestUrl,
@@ -44,7 +44,10 @@ const makeHtml: MakeHtml = async function ({
       reduxStore={reduxStore}
     />
   );
+
+  await getDataFromTree(appRoot);
   const appRootInString = renderToString(appRoot);
+  const apolloState = apolloClient.extract();
 
   expressLog.debug('makeHtml() with store: %j', reduxStore.getState());
   expressLog.debug('appRootInString: %s', appRootInString);

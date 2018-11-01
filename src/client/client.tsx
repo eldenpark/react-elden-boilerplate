@@ -14,7 +14,7 @@ const appRoot = document.getElementById('app-root');
 const FAKE_GRAPHQL_SERVER_URL_LAUNCHED_AS_TOOLS = 'http://localhost:5010/graphql';
 
 const apolloClient = new ApolloClient({ 
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache().restore(window['__APOLLO_STATE__']),
   link: createHttpLink({
     uri: FAKE_GRAPHQL_SERVER_URL_LAUNCHED_AS_TOOLS,
   }),
