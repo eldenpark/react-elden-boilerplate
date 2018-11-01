@@ -10,11 +10,11 @@ import { ConnectedReduxProps } from '@universal/state/configureStore';
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 
-const GQL1 = gql`
-{
-  rates(currency: "USD") {
-    currency
-    rate
+const sampleGQLWhichShouldNotChange = gql`
+query getDeal ($id: Long!) {
+  deal(id: $id) {
+    id
+    title
   }
 }
 `;
@@ -27,11 +27,25 @@ class GraphQLContainer extends React.Component<GraphQLContainerProps> {
   render() {
     return (
       <div>
-        query
-        <Query query={GQL1}>
+        <Query 
+          variables={{
+            id: 557802,
+          }}
+          query={sampleGQLWhichShouldNotChange}
+        >
           {({ loading, error, data}) => {
-            console.log(12322, loading, error, data);
-            return <div>1</div>
+            return (
+              <div>
+                <div>
+                  <span>id: </span>
+                  <span>{data.deal && data.deal.id}</span>
+                </div>
+                <div>
+                  <span>title: </span>
+                  <span>{data.deal && data.deal.title}</span>
+                </div>
+              </div>
+            );
           }}
         </Query>
       </div>

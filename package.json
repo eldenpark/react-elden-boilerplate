@@ -50,6 +50,7 @@
     "babel-loader": "^8.0.4",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-styled-components": "^1.8.0",
+    "cors": "^2.8.4",
     "css-loader": "^0.28.11",
     "del": "^3.0.0",
     "eslint": "^5.6.1",
@@ -86,7 +87,9 @@
     "build:prod": "NODE_ENV=production ./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:prod",
     "build:server": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js build:server",
     "dev:local": "NODE_ENV=development yarn run build:server && NODE_ENV=development node ./dist/babel/server/server.js",
+    "dev:local:withtools": "npm-run-all --parallel dev:local start:tools",
     "lint": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js tslint",
+    "start:tools": "NODE_ENV=development node ./tools/graphql-server/graphqlServer.js",
     "start:prod": "NODE_ENV=production node ./dist/babel/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "./node_modules/.bin/gulp --gulpfile ./internals/gulp/gulpfile.js tsc"

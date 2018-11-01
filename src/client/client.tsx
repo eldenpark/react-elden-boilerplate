@@ -11,11 +11,12 @@ import configureStore from '@universal/state/configureStore';
 console.info('App (client.jsx) is running, NODE_ENV: %s', process.env.NODE_ENV);
 
 const appRoot = document.getElementById('app-root');
+const FAKE_GRAPHQL_SERVER_URL_LAUNCHED_AS_TOOLS = 'http://localhost:5010/graphql';
 
 const apolloClient = new ApolloClient({ 
   cache: new InMemoryCache(),
   link: createHttpLink({
-    uri: 'https://nx9zvp49q7.lp.gql.zone/graphql',
+    uri: FAKE_GRAPHQL_SERVER_URL_LAUNCHED_AS_TOOLS,
   }),
 });
 
